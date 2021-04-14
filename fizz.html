@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<body>
+<p id="display"></p>
+<script>
+	//Variable setup
+	var zzz = Math.floor((Math.random() * 100) + 1);
+	var firstTest = 0;
+	var secondTest = 0;
+	//Divisibility tests
+	if (zzz % 3 === 0) {
+		var firstTest = 1
+	};
+	if (zzz % 5 === 0) {
+		var secondTest = 1
+	};
+	//Logic tests and result logging
+	if (firstTest === 1 && secondTest === 0) {
+		console.log("Fizz")
+	} else if (firstTest === 0 && secondTest === 1) {
+		console.log("Buzz")
+	} else if (firstTest === 1 && secondTest === 1) {
+		console.log("FizzBuzz")
+	} else if (firstTest === 0 && secondTest === 0) {
+		console.log(zzz)
+	} else {
+		console.log("This shouldn't be possible.")
+	};
+	console.log("The number was: " + zzz);
+</script>
+</body>
+</html>
