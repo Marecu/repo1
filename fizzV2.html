@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<body>
+<p id="fullArray"></p>
+<p id="outputArray"></p>
+<script>
+	//Variable setup
+	var min = 1;
+	var max = 100;
+	var range = [];
+	while(min <= max) {
+		range.push(min++);
+	};
+	var output = ""
+	//Function to test the divisibility
+	const divisibilityTest = (range) => {
+		var firstTest = 0;
+		var secondTest = 0;
+		if (range % 3 === 0) {
+			var firstTest = 1
+		};
+		if (range % 5 === 0)  {
+			var secondTest = 1
+		};
+		switch (firstTest) {
+			case 0:
+				switch (secondTest) {
+					case 0:
+						output = output + range + " ";
+						break;
+					case 1:
+						output = output + "Buzz ";
+						break;
+					default:
+						output = output + "Failed at " + range + " ";
+
+				}
+				break;
+			case 1:
+				switch (secondTest) {
+					case 0:
+						output = output + "Fizz "
+						break;
+					case 1:
+						output = output + "FizzBuzz ";
+						break;
+					default:
+						output = output + "Failed at " + range + " ";
+
+				}
+				break;
+			default:
+				output = output + "Failed at " + range + " ";
+		};
+	};
+	//Input into the HTML and calling the divisibility test function for every value in the array
+	document.getElementById("fullArray").innerHTML = range
+	range.forEach(divisibilityTest)
+	document.getElementById("outputArray").innerHTML = output
+</script>
+<style>
+	p {
+		max-width: 1900px;
+		font-family: Cambria;
+	}
+</style>
+</body>
+</html>
