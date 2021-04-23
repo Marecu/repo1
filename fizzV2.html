@@ -1,8 +1,10 @@
 <!DOCTYPE html>
 <html>
 <body>
-<p id="fullArray"></p>
-<p id="outputArray"></p>
+<p>The numbers are:</p>
+<div id="fullArray"></div>
+<p>The output is:</p>
+<div id="outputArray"></div>
 <script>
 	//Variable setup
 	var min = 1;
@@ -11,7 +13,12 @@
 	while(min <= max) {
 		range.push(min++);
 	};
+	var numbers = ""
 	var output = ""
+	//Function to list all of the numbers
+	const numberDisplay = (range) => {
+		numbers = numbers + range + ", ";
+	}
 	//Function to test the divisibility
 	const divisibilityTest = (range) => {
 		var firstTest = 0;
@@ -26,41 +33,49 @@
 			case 0:
 				switch (secondTest) {
 					case 0:
-						output = output + range + " ";
+						output = output + range + ", ";
 						break;
 					case 1:
-						output = output + "Buzz ";
+						output = output + "Buzz, ";
 						break;
 					default:
-						output = output + "Failed at " + range + " ";
+						output = output + "Failed at " + range + ", ";
 
 				}
 				break;
 			case 1:
 				switch (secondTest) {
 					case 0:
-						output = output + "Fizz "
+						output = output + "Fizz, ";
 						break;
 					case 1:
-						output = output + "FizzBuzz ";
+						output = output + "FizzBuzz, ";
 						break;
 					default:
-						output = output + "Failed at " + range + " ";
+						output = output + "Failed at " + range + ", ";
 
 				}
 				break;
 			default:
-				output = output + "Failed at " + range + " ";
+				output = output + "Failed at " + range + ", ";
 		};
 	};
 	//Input into the HTML and calling the divisibility test function for every value in the array
-	document.getElementById("fullArray").innerHTML = range
+	range.forEach(numberDisplay)
+	document.getElementById("fullArray").innerHTML = numbers
 	range.forEach(divisibilityTest)
 	document.getElementById("outputArray").innerHTML = output
 </script>
 <style>
+	div {
+		max-width: 1920px;
+		font-family: Cambria;
+		border: 1px solid gray;
+		margin-top: 10px;
+		background-image: linear-gradient(white, lightgray);
+	}
 	p {
-		max-width: 1900px;
+		text-align: center;
 		font-family: Cambria;
 	}
 </style>
