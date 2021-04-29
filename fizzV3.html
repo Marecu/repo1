@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
 <body>
+<ol id="numbers"></ol>
 <ol id="fullArray"></ol>
 <script>
 	//Variable setup
@@ -10,7 +11,14 @@
 	while(min <= max) {
 		range.push(min++);
 	};
-	//Function to test the divisibility and input values into the ordered list
+	//Function to generate the numbers and input them into an ordered list
+	const numberGeneration = (range) => {
+		let list = document.getElementById("numbers");
+		let component = document.createElement("li");
+		component.innerHTML = `${range}:`;
+		list.appendChild(component);
+	}
+	//Function to test the divisibility and input values into an ordered list
 	const divisibilityTest = (range) => {
 		let firstTest = 0;
 		let secondTest = 0;
@@ -63,21 +71,41 @@
 				list.appendChild(component);
 		};
 	};
-	//Calling the divisibility test function for every value in the array
+	//Calling the two functions for every value in the array
 	range.forEach(divisibilityTest)
+	range.forEach(numberGeneration)
 </script>
 <style>
 	body {
 		background-image: linear-gradient(to right, #000000, #444444);
 	}
-	ol {
-		border: 1px solid gray;
+	#numbers {
+		border-left: 1px solid gray;
+		border-top: 1px solid gray;
+		border-bottom: 1px solid gray;
 		font-family: Cambria;
 		font-weight: bold;
-		background-image: linear-gradient(to right, #ffffff, #aaaaaa);
-		max-width: 75px;
+		background-image: linear-gradient(to right, #ffffff, #dddddd);
+		position: relative;
+		left: 45%;
+		list-style: none;
+		display: inline-block;
+		margin-right: -99px;
+		text-align: center;
+		padding: 10px;
+	}
+	#fullArray {
+		border-right: 1px solid gray;
+		border-top: 1px solid gray;
+		border-bottom: 1px solid gray;
+		font-family: Cambria;
+		font-weight: bold;
+		background-image: linear-gradient(to right, #dddddd, #aaaaaa);
 		position: relative;
 		left: 50%;
+		list-style: none;
+		display: inline-block;
+		padding: 10px;
 	}
 	#number {
 		color: #444444;
