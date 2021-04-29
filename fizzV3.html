@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+<body>
+<ol id="numbers"></ol>
+<ol id="fullArray"></ol>
+<script>
+	//Variable setup
+	var min = 1;
+	var max = 100;
+	var range = [];
+	while(min <= max) {
+		range.push(min++);
+	};
+	//Function to generate the numbers and input them into an ordered list
+	const numberGeneration = (range) => {
+		let list = document.getElementById("numbers");
+		let component = document.createElement("li");
+		component.innerHTML = `${range}:`;
+		list.appendChild(component);
+	}
+	//Function to test the divisibility and input values into an ordered list
+	const divisibilityTest = (range) => {
+		let firstTest = 0;
+		let secondTest = 0;
+		let list = document.getElementById("fullArray");
+		let component = document.createElement("li");
+		if (range % 3 === 0) {
+			firstTest = 1
+		};
+		if (range % 5 === 0)  {
+			secondTest = 1
+		};
+		switch (firstTest) {
+			case 0:
+				switch (secondTest) {
+					case 0:
+						component.setAttribute("id", "number");
+						component.innerHTML = range;
+						list.appendChild(component);
+						break;
+					case 1:
+						component.setAttribute("id", "buzz");
+						component.innerHTML = "Buzz";
+						list.appendChild(component);
+						break;
+					default:
+						component.innerHTML = `Failed at ${range}`;
+						list.appendChild(component);
+
+				}
+				break;
+			case 1:
+				switch (secondTest) {
+					case 0:
+						component.setAttribute("id", "fizz");
+						component.innerHTML = "Fizz";
+						list.appendChild(component);
+						break;
+					case 1:
+						component.setAttribute("id", "fizzBuzz");
+						component.innerHTML = "FizzBuzz";
+						list.appendChild(component);
+						break;
+					default:
+						component.innerHTML = `Failed at ${range}`;
+						list.appendChild(component);
+				}
+				break;
+			default:
+				component.innerHTML = `Failed at ${range}`;
+				list.appendChild(component);
+		};
+	};
+	//Calling the two functions for every value in the array
+	range.forEach(divisibilityTest)
+	range.forEach(numberGeneration)
+</script>
+<style>
+	body {
+		background-image: linear-gradient(to right, #000000, #444444);
+	}
+	#numbers {
+		border-left: 1px solid gray;
+		border-top: 1px solid gray;
+		border-bottom: 1px solid gray;
+		font-family: Cambria;
+		font-weight: bold;
+		background-image: linear-gradient(to right, #ffffff, #dddddd);
+		position: relative;
+		left: 45%;
+		list-style: none;
+		display: inline-block;
+		margin-right: -99px;
+		text-align: center;
+		padding: 10px;
+	}
+	#fullArray {
+		border-right: 1px solid gray;
+		border-top: 1px solid gray;
+		border-bottom: 1px solid gray;
+		font-family: Cambria;
+		font-weight: bold;
+		background-image: linear-gradient(to right, #dddddd, #aaaaaa);
+		position: relative;
+		left: 50%;
+		list-style: none;
+		display: inline-block;
+		padding: 10px;
+	}
+	#number {
+		color: #444444;
+	}
+	#fizz {
+		color: #57bfff;
+	}
+	#buzz {
+		color: #30d5c8;
+	}
+	#fizzBuzz {
+		color: #008972;
+	}
+</style>
+</body>
+</html>
