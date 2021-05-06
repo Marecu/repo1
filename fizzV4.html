@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html>
+<body>
+<h1 id="header">FizzBuzz</h1>
+<div id="legend">Input two numbers into the field below.<br><br>
+	Numbers divisible by 3 will be classified as "Fizz".<br><br>
+	Numbers divisible by 5 will be classified as "Buzz".<br><br>
+	Numbers divisible by both 3 and 5 will be classified as "FizzBuzz".<br><br>
+	Any other numbers will show as themselves.
+</div>
+<form id="input">
+	<label for="min">Minimum number:</label>
+	<input type="text" id="min" name="min" class="field"><br><br>
+	<label for="max">Maximum number:</label>
+	<input type="text" id="max" name="max" class="field"><br><br>
+</form>
+<button onclick="generateList()" id="input2" class="partOne">Generate List</button>
+<script>
+	const generateList = () => {
+	//Setup
+	let min = document.getElementById("min").value;
+	let max = document.getElementById("max").value;
+	let listStart = min - 1
+	let range = [];
+	let fullArray = document.createElement("ol");
+	fullArray.setAttribute("id", "fullArray");
+	fullArray.setAttribute("start", min);
+	fullArray.setAttribute("style", `counter-reset: counter ${listStart}`)
+	document.body.appendChild(fullArray);
+	while(min <= max) {
+		range.push(min++);
+	};
+	//Removing the elements from the first screen
+	let remove1 = document.getElementById("input");
+	remove1.remove();
+	let remove2 = document.getElementById("input2");
+	remove2.remove();
+	let remove3 = document.getElementById("header");
+	remove3.remove();
+	let remove4 = document.getElementById("legend");
+	remove4.remove();
+	//Function to test the divisibility and input values into an ordered list
+	const divisibilityTest = (range) => {
+		let firstTest = 0;
+		let secondTest = 0;
+		let list = document.getElementById("fullArray");
+		let component = document.createElement("li");
+		if (range % 3 === 0) {
+			firstTest = 1
+		};
+		if (range % 5 === 0)  {
+			secondTest = 1
+		};
+		switch (firstTest) {
+			case 0:
+				switch (secondTest) {
+					case 0:
+						component.setAttribute("id", "number");
+						component.innerHTML = range;
+						list.appendChild(component);
+						break;
+					case 1:
+						component.setAttribute("id", "buzz");
+						component.innerHTML = "Buzz";
+						list.appendChild(component);
+						break;
+					default:
+						component.innerHTML = `Failed at ${range}`;
+						list.appendChild(component);
+
+				}
+				break;
+			case 1:
+				switch (secondTest) {
+					case 0:
+						component.setAttribute("id", "fizz");
+						component.innerHTML = "Fizz";
+						list.appendChild(component);
+						break;
+					case 1:
+						component.setAttribute("id", "fizzBuzz");
+						component.innerHTML = "FizzBuzz";
+						list.appendChild(component);
+						break;
+					default:
+						component.innerHTML = `Failed at ${range}`;
+						list.appendChild(component);
+				}
+				break;
+			default:
+				component.innerHTML = `Failed at ${range}`;
+				list.appendChild(component);
+		};
+	};
+	//Calling the two functions for every value in the array
+	range.forEach(divisibilityTest)
+	}
+</script>
+<style>
+	body {
+		background-image: linear-gradient(to right, #000000, #444444);
+	}
+	h1 {
+		color: #ffffff;
+		position: fixed;
+		left: 42.5%;
+		top: 3%;
+		font-family: Cambria;
+		font-size: 60px;
+	}
+	form {
+		color: #ffffff;
+		position: fixed;
+		left: 40%;
+		top: 70%;
+		font-family: Cambria;
+	}
+	button {
+		position: fixed;
+		left: 44%;
+		top: 80%;
+		background-color: #ffffff;
+		font-family: Cambria;
+		font-size: 30px;
+		color: #000000;
+		transition: background-color 0.25s;
+	}
+	button:hover {
+		background-color: #a4e2c9
+	}
+	ol li {
+		counter-increment: counter;
+	}
+	ol li:before {
+		content: counter(counter) ": ";
+		color: #000000;
+	}
+	#legend {
+		height: 250px;
+		width: 300px;
+		position: fixed;
+		left:40%;
+		top: 20%;
+		font-family: Cambria;
+		padding: 10px;
+		border: 1px solid gray;
+		background-color: #aaaaaa;
+	}
+	.field:hover {
+		background-color: #aaaaaa;
+		transition: background-color 0.1s
+	}
+	#fullArray {
+		border: 1px solid gray;
+		font-family: Cambria;
+		font-weight: bold;
+		background-image: linear-gradient(to right, #aaaaaa, #dddddd, #aaaaaa);
+		position: relative;
+		list-style: none;
+		display: flex;
+		flex-direction: column;
+		flex-wrap: wrap;
+		height: 900px;
+		padding: 10px;
+	}
+	#number {
+		color: #444444;
+	}
+	#fizz {
+		color: #57bfff;
+	}
+	#buzz {
+		color: #30d5c8;
+	}
+	#fizzBuzz {
+		color: #008972;
+	}
+</style>
+</body>
+</html>
