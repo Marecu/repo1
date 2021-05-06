@@ -1,39 +1,44 @@
 <!DOCTYPE html>
 <html>
 <body>
+<h1 id="header">FizzBuzz</h1>
+<div id="legend">Input two numbers into the field below.<br><br>
+	Numbers divisible by 3 will be classified as "Fizz".<br><br>
+	Numbers divisible by 5 will be classified as "Buzz".<br><br>
+	Numbers divisible by both 3 and 5 will be classified as "FizzBuzz".<br><br>
+	Any other numbers will show as themselves.
+</div>
 <form id="input">
 	<label for="min">Minimum number:</label>
-	<input type="text" id="min" name="min"><br><br>
+	<input type="text" id="min" name="min" class="field"><br><br>
 	<label for="max">Maximum number:</label>
-	<input type="text" id="max" name="max"><br><br>
+	<input type="text" id="max" name="max" class="field"><br><br>
 </form>
-<button onclick="generateList()" id="input2">Generate List</button>
+<button onclick="generateList()" id="input2" class="partOne">Generate List</button>
 <script>
 	const generateList = () => {
 	//Setup
 	let min = document.getElementById("min").value;
 	let max = document.getElementById("max").value;
+	let listStart = min - 1
 	let range = [];
+	let fullArray = document.createElement("ol");
+	fullArray.setAttribute("id", "fullArray");
+	fullArray.setAttribute("start", min);
+	fullArray.setAttribute("style", `counter-reset: counter ${listStart}`)
+	document.body.appendChild(fullArray);
 	while(min <= max) {
 		range.push(min++);
 	};
+	//Removing the elements from the first screen
 	let remove1 = document.getElementById("input");
 	remove1.remove();
 	let remove2 = document.getElementById("input2");
 	remove2.remove();
-	let numbers = document.createElement("ol");
-	numbers.setAttribute("id", "numbers");
-	document.body.appendChild(numbers);
-	let fullArray = document.createElement("ol");
-	fullArray.setAttribute("id", "fullArray");
-	document.body.appendChild(fullArray);
-	//Function to generate the numbers and input them into an ordered list
-	const numberGeneration = (range) => {
-		let list = document.getElementById("numbers");
-		let component = document.createElement("li");
-		component.innerHTML = `${range}:`;
-		list.appendChild(component);
-	}
+	let remove3 = document.getElementById("header");
+	remove3.remove();
+	let remove4 = document.getElementById("legend");
+	remove4.remove();
 	//Function to test the divisibility and input values into an ordered list
 	const divisibilityTest = (range) => {
 		let firstTest = 0;
@@ -89,58 +94,73 @@
 	};
 	//Calling the two functions for every value in the array
 	range.forEach(divisibilityTest)
-	range.forEach(numberGeneration)
-	console.log(range)
 	}
 </script>
 <style>
 	body {
 		background-image: linear-gradient(to right, #000000, #444444);
 	}
+	h1 {
+		color: #ffffff;
+		position: fixed;
+		left: 42.5%;
+		top: 3%;
+		font-family: Cambria;
+		font-size: 60px;
+	}
 	form {
-		color: white;
+		color: #ffffff;
 		position: fixed;
 		left: 40%;
+		top: 70%;
 		font-family: Cambria;
 	}
 	button {
 		position: fixed;
 		left: 44%;
-		top: 100px;
+		top: 80%;
 		background-color: #ffffff;
 		font-family: Cambria;
 		font-size: 30px;
 		color: #000000;
+		transition: background-color 0.25s;
 	}
 	button:hover {
-		background-color: #ebb1ea
+		background-color: #a4e2c9
 	}
-	#numbers {
-		border-left: 1px solid gray;
-		border-top: 1px solid gray;
-		border-bottom: 1px solid gray;
+	ol li {
+		counter-increment: counter;
+	}
+	ol li:before {
+		content: counter(counter) ": ";
+		color: #000000;
+	}
+	#legend {
+		height: 250px;
+		width: 300px;
+		position: fixed;
+		left:40%;
+		top: 20%;
 		font-family: Cambria;
-		font-weight: bold;
-		background-image: linear-gradient(to right, #ffffff, #dddddd);
-		position: relative;
-		left: 45%;
-		list-style: none;
-		display: inline-block;
-		margin-right: -99px;
-		text-align: center;
 		padding: 10px;
+		border: 1px solid gray;
+		background-color: #aaaaaa;
+	}
+	.field:hover {
+		background-color: #aaaaaa;
+		transition: background-color 0.1s
 	}
 	#fullArray {
-		border-right: 1px solid gray;
-		border-top: 1px solid gray;
-		border-bottom: 1px solid gray;
+		border: 1px solid gray;
 		font-family: Cambria;
 		font-weight: bold;
-		background-image: linear-gradient(to right, #dddddd, #aaaaaa);
+		background-image: linear-gradient(to right, #aaaaaa, #dddddd, #aaaaaa);
 		position: relative;
-		left: 50%;
 		list-style: none;
-		display: inline-block;
+		display: flex;
+		flex-direction: column;
+		flex-wrap: wrap;
+		height: 900px;
 		padding: 10px;
 	}
 	#number {
