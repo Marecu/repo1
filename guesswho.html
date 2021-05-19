@@ -4,14 +4,16 @@
 <div id="intro">
 <h1 id="title">WCS Guess Who</h1>
 <p id="desc">Click start to play!</p>
+<p id="desc2">Number of names:</p>
 <p id="credits">Made by Marcus</p>
+<input type="number" id="inputField">
 <form>
 	<button onclick="game()" id="generate">Start</button>
 </form>
 </div>
 <script>
 	//Global variable setup
-	let names = ["Malik", "Ahmed", "Althea", "Ayesha", "Carter", "Johnathan", "James", "Cam", "Kiandra", "Ruby", "Amy", "Jazz", "Jonah", "Aayush", "Matt", "Caylen", "Jacob", "Berton", "Ryan H", "Orchee", "Jade", "Darragh", "Elise", "Jun", "Zaid", "Adeeb", "Tony", "Alexander H", "Gavin", "Kaelen", "Reia", "Royce", "Ryder", "Kira", "Maya", "Kaden", "Raymond", "Samuel", "Reece", "Kathryn", "Alisha", "Paul", "Enzo", "Hannah", "Zane", "Harvir", "Jasvir", "Dhanika", "Emanuel", "Ilan", "Jianna", "Rahul", "Paige", "Ryan S", "Anna", "Maitri", "Bella", "Pahul", "Evan", "Richa", "Grace", "Faraz", "Marcus", "Lachlan", "Alexander V", "Arman", "Riley", "Griffin", "Chloe", "Shannon", "Elena", "William", "Abdullah", "Sraddha", "Amitoj", "Kai", "Yonu", "Tristen", "Peter", "Lucas", "Diptorup", "Jadyn", "Roan", "Sophie", "Goran", "Andrew", "Satwant", "Frederick", "Dylan", "Adeline", "Stephen", "Georgia", "Mateo"];
+	let names = ["Malik", "Ahmed", "Althea", "Ayesha", "Carter", "Jonathan", "James", "Cam", "Kiandra", "Ruby", "Amy", "Jazz", "Jonah", "Aayush", "Matt", "Caylen", "Jacob", "Berton", "Ryan H", "Orchee", "Jade", "Darragh", "Elise", "Jun", "Zaid", "Adeeb", "Tony", "Alexandar H", "Gavin", "Kaelen", "Reia", "Royce", "Ryder", "Kira", "Maya", "Kaden", "Raymond", "Samuel", "Reece", "Kathryn", "Alisha", "Paul", "Enzo", "Hannah", "Zane", "Harvir", "Jasvir", "Dhanika", "Emanuel", "Ilan", "Jianna", "Rahul", "Paige", "Ryan S", "Anna", "Maitri", "Bella", "Pahul", "Evan", "Richa", "Grace", "Faraz", "Marcus", "Lachlan", "Alexander V", "Arman", "Riley", "Griffin", "Chloe", "Shannon", "Elena", "William", "Abdullah", "Sraddha", "Amitoj", "Kai", "Yonu", "Tristen", "Peter", "Lucas", "Diptorup", "Jadyn", "Roan", "Sophie", "Goran", "Andrew", "Satwant", "Frederick", "Dylan", "Adeline", "Stephen", "Georgia", "Mateo"];
 	let chosenNames = [];
 	document.getElementById("generate").addEventListener("click", function(stop){
 		stop.preventDefault();
@@ -19,6 +21,8 @@
 	let list = document.createElement("ul");
 	list.setAttribute("id", "nameList");
 	const game = () => {
+		let nameTotal = parseInt(document.getElementById("inputField").value);
+		if(nameTotal >= 1) {
 		//Removing the first screen
 		let remove = document.getElementById("intro");
 		remove.remove();
@@ -31,9 +35,9 @@
 		header2.setAttribute("id", "header2");
 		header2.innerHTML = "People eliminated:";
 		document.body.appendChild(header2);
-		//Random selection and initial list generation
 		document.body.appendChild(list);
-		while (chosenNames.length < 20) {
+		//Random selection and initial list generation
+		while (chosenNames.length < nameTotal) {
 			let num = Math.floor(Math.random() * names.length);
 			let inputName = names[num];
 			if (chosenNames.indexOf(inputName) === -1) {
@@ -49,14 +53,19 @@
 			add.setAttribute("id", name);
 			add.setAttribute("class", name);
 			list.appendChild(add);
-			add.innerHTML += `${name} `;
 			add.appendChild(deleteButton);
+			add.innerHTML += ` ${name}`;
 		};
 		chosenNames.forEach(nameGen);
 		//Eliminated list
 		let eliminated = document.createElement("ul");
 		eliminated.setAttribute("id", "eliminated");
 		document.body.appendChild(eliminated);
+		} else {
+			let clear = document.getElementById("inputField");
+			clear.value = null;
+			alert("Number of names cannot be less than one.");
+		}
 	};
 	//Function on clicking the X button
 	const deleteClick = (name) => {
@@ -69,8 +78,8 @@
 		returnButton.setAttribute("class", `returnButton`);
 		returnButton.setAttribute("onclick", `returnClick("${name}")`);
 		returnButton.innerText = "✓";
-		add.innerHTML = `${element.id} `;
 		add.appendChild(returnButton);
+		add.innerHTML += ` ${element.id}`;
 		getEliminated.appendChild(add);
 		getList.removeChild(element);
 	};
@@ -85,8 +94,8 @@
 		deleteButton.setAttribute("class", `deleteButton`);
 		deleteButton.setAttribute("onclick", `deleteClick("${name}")`);
 		deleteButton.innerText = "✗";
-		add.innerHTML = `${element.id} `;
 		add.appendChild(deleteButton);
+		add.innerHTML += ` ${element.id}`;
 		getOriginal.appendChild(add);
 		getList.removeChild(element);
 	};
@@ -115,6 +124,31 @@
 		left: 92%;
 		top: 95%;
 	}
+	#desc2 {
+		position: fixed;
+		left: 43%;
+		top: 44.5%;
+		font-size: 20px;
+	}
+	#inputField {
+		position: fixed;
+		font-size: 30px;
+		left: 45%;
+		top: 50%;
+		width: 100px;
+		color: #ffffff;
+		background-color: #333333;
+		border: 3px solid #ffffff;
+		text-align: center;
+	}
+	#inputField:hover {
+		background-color: #555555;
+	}
+	input::-webkit-outer-spin-button,
+	input::-webkit-inner-spin-button {
+		-webkit-appearance: none;
+		margin: 0;
+	}
 	#generate {
 		width: 400px;
 		height: 100px;
@@ -125,7 +159,7 @@
 		border: 3px solid #ffffff;
 		position: fixed;
 		font-weight: bold;
-		left: 37.7%;
+		left: 37.5%;
 		top: 70%;
 	}
 	#generate:hover {
