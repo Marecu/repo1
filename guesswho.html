@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html>
+<body>
+<div id="intro">
+<h1 id="title">WCS Guess Who</h1>
+<p id="desc">Click start to play!</p>
+<p id="credits">Made by Marcus</p>
+<form>
+	<button onclick="game()" id="generate">Start</button>
+</form>
+</div>
+<script>
+	//Global variable setup
+	let names = ["Malik", "Ahmed", "Althea", "Ayesha", "Carter", "Johnathan", "James", "Cam", "Kiandra", "Ruby", "Amy", "Jazz", "Jonah", "Aayush", "Matt", "Caylen", "Jacob", "Berton", "Ryan H", "Orchee", "Jade", "Darragh", "Elise", "Jun", "Zaid", "Adeeb", "Tony", "Alexander H", "Gavin", "Kaelen", "Reia", "Royce", "Ryder", "Kira", "Maya", "Kaden", "Raymond", "Samuel", "Reece", "Kathryn", "Alisha", "Paul", "Enzo", "Hannah", "Zane", "Harvir", "Jasvir", "Dhanika", "Emanuel", "Ilan", "Jianna", "Rahul", "Paige", "Ryan S", "Anna", "Maitri", "Bella", "Pahul", "Evan", "Richa", "Grace", "Faraz", "Marcus", "Lachlan", "Alexander V", "Arman", "Riley", "Griffin", "Chloe", "Shannon", "Elena", "William", "Abdullah", "Sraddha", "Amitoj", "Kai", "Yonu", "Tristen", "Peter", "Lucas", "Diptorup", "Jadyn", "Roan", "Sophie", "Goran", "Andrew", "Satwant", "Frederick", "Dylan", "Adeline", "Stephen", "Georgia", "Mateo"];
+	let chosenNames = [];
+	document.getElementById("generate").addEventListener("click", function(stop){
+		stop.preventDefault();
+	});
+	let list = document.createElement("ul");
+	list.setAttribute("id", "nameList");
+	const game = () => {
+		//Removing the first screen
+		let remove = document.getElementById("intro");
+		remove.remove();
+		//Headers and other misc text
+		let header1 = document.createElement("h1");
+		header1.setAttribute("id", "header1");
+		header1.innerHTML = "People left:";
+		document.body.appendChild(header1);
+		let header2 = document.createElement("h1");
+		header2.setAttribute("id", "header2");
+		header2.innerHTML = "People eliminated:";
+		document.body.appendChild(header2);
+		//Random selection and initial list generation
+		document.body.appendChild(list);
+		while (chosenNames.length < 20) {
+			let num = Math.floor(Math.random() * names.length);
+			let inputName = names[num];
+			if (chosenNames.indexOf(inputName) === -1) {
+					chosenNames.push(inputName);
+			};
+		};
+		const nameGen = (name) => {
+			let add = document.createElement("li");
+			let deleteButton = document.createElement("button");
+			deleteButton.setAttribute("class", `deleteButton`);
+			deleteButton.setAttribute("onclick", `deleteClick("${name}")`);
+			deleteButton.innerText = "✗";
+			add.setAttribute("id", name);
+			add.setAttribute("class", name);
+			list.appendChild(add);
+			add.innerHTML += `${name} `;
+			add.appendChild(deleteButton);
+		};
+		chosenNames.forEach(nameGen);
+		//Eliminated list
+		let eliminated = document.createElement("ul");
+		eliminated.setAttribute("id", "eliminated");
+		document.body.appendChild(eliminated);
+	};
+	//Function on clicking the X button
+	const deleteClick = (name) => {
+		let getList = document.getElementById("nameList");
+		let element = document.getElementById(name);
+		let getEliminated = document.getElementById("eliminated");
+		let add = document.createElement("li");
+		add.setAttribute("id", name);
+		let returnButton = document.createElement("button");
+		returnButton.setAttribute("class", `returnButton`);
+		returnButton.setAttribute("onclick", `returnClick("${name}")`);
+		returnButton.innerText = "✓";
+		add.innerHTML = `${element.id} `;
+		add.appendChild(returnButton);
+		getEliminated.appendChild(add);
+		getList.removeChild(element);
+	};
+	//Function on clicking the ✓ button
+	const returnClick = (name) => {
+		let getList = document.getElementById("eliminated");
+		let element = document.getElementById(name);
+		let getOriginal = document.getElementById("nameList");
+		let add = document.createElement("li");
+		add.setAttribute("id", name);
+		let deleteButton = document.createElement("button");
+		deleteButton.setAttribute("class", `deleteButton`);
+		deleteButton.setAttribute("onclick", `deleteClick("${name}")`);
+		deleteButton.innerText = "✗";
+		add.innerHTML = `${element.id} `;
+		add.appendChild(deleteButton);
+		getOriginal.appendChild(add);
+		getList.removeChild(element);
+	};
+</script>
+<style>
+	body {
+		background-color: #000000;
+	}
+	#intro {
+		color: #ffffff;
+		display: inline-block;
+		position: fixed;
+		font-family: "Courier New";
+		left: 28%;
+	}
+	#title {
+		font-size: 100px;
+		text-align: center;
+	}
+	#desc {
+		font-size: 30px;
+		text-align: center;
+	}
+	#credits {
+		position: fixed;
+		left: 92%;
+		top: 95%;
+	}
+	#generate {
+		width: 400px;
+		height: 100px;
+		font-family: "Courier New";
+		font-size: 50px;
+		color: #ffffff;
+		background-color: #333333;
+		border: 3px solid #ffffff;
+		position: fixed;
+		font-weight: bold;
+		left: 37.7%;
+		top: 70%;
+	}
+	#generate:hover {
+		background-color: #26daeb;
+		color: #000000;
+		transition: 0.1s;
+	}
+	#header1 {
+		color: #ffffff;
+		display: inline-block;
+		position: fixed;
+		left: 30%;
+		font-family: "Courier";
+	}
+	#header2 {
+		color: #ffffff;
+		display: inline-block;
+		position: fixed;
+		right: 30%;
+		font-family: "Courier";
+		float: right;
+	}
+	#nameList {
+		list-style-type: none;
+		font-family: "Courier";
+		color: #ffffff;
+		border: 2px solid #333333;
+		border-style: round;
+		padding: 8px;
+		position: fixed;
+		left: 30%;
+		top: 8%;
+		min-width: 205px;
+		display: inline-block;
+	}
+	#eliminated {
+		list-style-type: none;
+		font-family: "Courier";
+		color: #ffffff;
+		border: 2px solid #333333;
+		border-style: round;
+		padding: 8px;
+		display: inline-block;
+		position: fixed;
+		right: 30.25%;
+		top: 8%;
+		min-width: 320px;
+		float: right;
+	}
+	.deleteButton {
+		background-color: #333333;
+		border: 1px solid #ffffff;
+		color: #ffffff;
+		font-family: "Verdana";
+	}
+	.deleteButton:hover {
+		background-color: #dc143c;
+		transition: 0.1s;
+	}
+	.returnButton {
+		background-color: #333333;
+		border: 1px solid #ffffff;
+		color: #ffffff;
+		font-family: "Verdana";
+	}
+	.returnButton:hover {
+		background-color: #28bf4e;
+		transition: 0.1s;
+	}
+</style>
+</body>
+</html>
