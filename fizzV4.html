@@ -10,16 +10,16 @@
 </div>
 <form id="input">
 	<label for="min">Minimum number:</label>
-	<input type="text" id="min" name="min" class="field"><br><br>
+	<input type="number" id="min" name="min" class="field"><br><br>
 	<label for="max">Maximum number:</label>
-	<input type="text" id="max" name="max" class="field"><br><br>
+	<input type="number" id="max" name="max" class="field"><br><br>
 </form>
 <button onclick="generateList()" id="input2" class="partOne">Generate List</button>
 <script>
 	const generateList = () => {
 	//Setup
-	let min = document.getElementById("min").value;
-	let max = document.getElementById("max").value;
+	let min = parseInt(document.getElementById("min").value);
+	let max = parseInt(document.getElementById("max").value);
 	let listStart = min - 1
 	let range = [];
 	let fullArray = document.createElement("ol");
