@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<script src="https://cdn.jsdelivr.net/npm/vue@2.6.12/dist/vue.js"></script>
+<body>
+<div id="start">
+	<button @click="reveal">asdasd</button>
+</div>
+<div id="list1">
+	<ul v-if="showlists">
+	<list v-for="name in chosenNames" v-bind:name="name"></list>
+	</ul>
+	<button @click="switchlist">test</button>
+	<button1></button1>
+</div>
+<script>
+let showlists = false
+Vue.component("button1", {
+	props: ["name"],
+	template: "<button>aa</button>",
+})
+Vue.component("list", {
+	props: ["name"],
+	template: "<li>{{ name.text }}</li>"
+})
+let app2 = new Vue({
+	el: "#start",
+	methods: {
+		reveal: function() {
+			showlists = true
+		}
+	}
+})
+let app = new Vue({
+	el: "#list1",
+	data: {
+		chosenNames: [
+		{ text: "item1" },
+		{ text: "item2" },
+		{ text: "item3" },
+		]
+	},
+	methods: {
+		switchlist: function() {
+			alert("aaa")
+		}
+	}
+})
+</script>
+</body>
+</html>
