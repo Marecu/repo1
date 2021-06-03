@@ -2,46 +2,48 @@
 <html>
 <script src="https://cdn.jsdelivr.net/npm/vue@2.6.12/dist/vue.js"></script>
 <body>
-<div id="start">
-	<button @click="reveal">asdasd</button>
-</div>
-<div id="list1">
-	<ul v-if="showlists">
-	<list v-for="name in chosenNames" v-bind:name="name"></list>
+<div id="app">
+	<button @click="reveal" v-if="!showlists">Start</button>
+	<ul id="nameList" v-if="showlists">
+		<li v-for="(name, index) in chosenNames" v-bind:name="name">
+			<button @click="switchlistone(index, name)">✗</button>
+			{{ name.text }}
+		</li>
 	</ul>
-	<button @click="switchlist">test</button>
-	<button1></button1>
+	<ul id="eliminatedList" v-if="showlists">
+		<li v-for="(name, index) in eliminatedNames" v-bind:name="name">
+			<button @click="switchlisttwo(index, name)">✗</button>
+			{{ name.text }}
+		</li>
+	</ul>
 </div>
 <script>
-let showlists = false
-Vue.component("button1", {
-	props: ["name"],
-	template: "<button>aa</button>",
-})
-Vue.component("list", {
-	props: ["name"],
-	template: "<li>{{ name.text }}</li>"
-})
-let app2 = new Vue({
-	el: "#start",
-	methods: {
-		reveal: function() {
-			showlists = true
-		}
-	}
-})
 let app = new Vue({
-	el: "#list1",
+	el: "#app",
 	data: {
+		showlists: false,
 		chosenNames: [
-		{ text: "item1" },
-		{ text: "item2" },
-		{ text: "item3" },
-		]
+		{text: "name1"},
+		{text: "name2"},
+		{text: "name3"},
+		{text: "name4"},
+		{text: "name5"},
+		{text: "name6"},
+		{text: "name7"},
+		],
+		eliminatedNames: []
 	},
 	methods: {
-		switchlist: function() {
-			alert("aaa")
+		switchlistone: function(index, name) {
+			this.eliminatedNames.push({text: name.text});
+			this.chosenNames.splice(index, 1);
+		},
+		switchlisttwo: function(index, name) {
+			this.chosenNames.push({text: name.text});
+			this.eliminatedNames.splice(index, 1);
+		},
+		reveal: function() {
+			this.showlists = true;
 		}
 	}
 })
