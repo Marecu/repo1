@@ -3,37 +3,59 @@
 <script src="https://cdn.jsdelivr.net/npm/vue@2.6.12/dist/vue.js"></script>
 <body>
 <div id="app">
-	<button @click="reveal" v-if="!showlists">Start</button>
-	<ul id="nameList" v-if="showlists">
-		<li v-for="(name, index) in chosenNames" v-bind:name="name">
-			<button @click="switchlistone(index, name)">✗</button>
-			{{ name.text }}
-		</li>
-	</ul>
-	<ul id="eliminatedList" v-if="showlists">
-		<li v-for="(name, index) in eliminatedNames" v-bind:name="name">
-			<button @click="switchlisttwo(index, name)">✗</button>
-			{{ name.text }}
-		</li>
-	</ul>
+	<div v-if="!showlists">
+		<div id="introText">
+			<h1 id="title">WCS Guess Who</h1>
+			<p id="desc">Click start to play!</p>
+			<p id="desc2">Number of names:</p>
+			<p id="credits">Made by Marcus</p>
+			<p id="credits2">V2.0</p>
+			<p id="warning" v-if="nameTotal > names.length || nameTotal <= 1">Name total must be between 2 and 93</p>
+		</div>
+		<button @click="reveal(); randomgeneration();" :class="[nameTotal > names.length ? 'start2' : nameTotal <= 1 ? 'start2' : 'start1']" :disabled="nameTotal > names.length || nameTotal <= 1">Start</button>
+		<input type="number" id="nameTotal" v-model="nameTotal">
+	</div>
+	<div v-if="showlists">
+		<h1 id="header1">People left:</h1>
+		<ul id="nameList">
+			<li v-for="(name, index) in chosenNames" v-bind:name="name">
+				<button class="deleteButton" @click="switchlistone(index, name)">✗</button>
+				{{ name.text }}
+			</li>
+		</ul>
+		<h1 id="header2" v-if="eliminatedNames.length > 0">People eliminated:</h1>
+		<ul id="eliminatedList" v-if="eliminatedNames.length > 0">
+			<li v-for="(name, index) in eliminatedNames" v-bind:name="name">
+				<button class="returnButton" @click="switchlisttwo(index, name)">✓</button>
+				{{ name.text }}
+			</li>
+		</ul>
+	</div>
 </div>
 <script>
 let app = new Vue({
 	el: "#app",
 	data: {
 		showlists: false,
-		chosenNames: [
-		{text: "name1"},
-		{text: "name2"},
-		{text: "name3"},
-		{text: "name4"},
-		{text: "name5"},
-		{text: "name6"},
-		{text: "name7"},
+		inputName: null,
+		nameTotal: null,
+		num: null,
+		names: [
+		{text: "Malik"}, {text: "Ahmed"}, {text: "Althea"}, {text: "Ayesha"}, {text: "Carter"}, {text: "Jonathan"}, {text: "James"}, {text: "Cam"}, {text: "Kiandra"}, {text: "Ruby"}, {text: "Amy"}, {text: "Jazz"}, {text: "Jonah"}, {text: "Aayush"}, {text: "Matt"}, {text: "Caylen"}, {text: "Jacob"}, {text: "Berton"}, {text: "Ryan H"}, {text: "Orchee"}, {text: "Jade"}, {text: "Darragh"}, {text: "Elise"}, {text: "Jun"}, {text: "Zaid"}, {text: "Adeeb"}, {text: "Tony"}, {text: "Alexandar H"}, {text: "Gavin"}, {text: "Kaelen"}, {text: "Reia"}, {text: "Royce"}, {text: "Ryder"}, {text: "Kira"}, {text: "Maya"}, {text: "Kaden"}, {text: "Raymond"}, {text: "Samuel"}, {text: "Reece"}, {text: "Kathryn"}, {text: "Alisha"}, {text: "Paul"}, {text: "Enzo"}, {text: "Hannah"}, {text: "Zane"}, {text: "Harvir"}, {text: "Jasvir"}, {text: "Dhanika"}, {text: "Emanuel"}, {text: "Ilan"}, {text: "Jianna"}, {text: "Rahul"}, {text: "Paige"}, {text: "Ryan S"}, {text: "Anna"}, {text: "Maitri"}, {text: "Bella"}, {text: "Pahul"}, {text: "Evan"}, {text: "Richa"}, {text: "Grace"}, {text: "Faraz"}, {text: "Marcus"}, {text: "Lachlan"}, {text: "Alexander V"}, {text: "Arman"}, {text: "Riley"}, {text: "Griffin"}, {text: "Chloe"}, {text: "Shannon"}, {text: "Elena"}, {text: "William"}, {text: "Abdullah"}, {text: "Sraddha"}, {text: "Amitoj"}, {text: "Kai"}, {text: "Yonu"}, {text: "Tristen"}, {text: "Peter"}, {text: "Lucas"}, {text: "Diptorup"}, {text: "Jadyn"}, {text: "Roan"}, {text: "Sophie"}, {text: "Goran"}, {text: "Andrew"}, {text: "Satwant"}, {text: "Frederick"}, {text: "Dylan"}, {text: "Adeline"}, {text: "Stephen"}, {text: "Georgia"}, {text: "Mateo"}
 		],
-		eliminatedNames: []
+		chosenNames: [],
+		eliminatedNames: [],
 	},
 	methods: {
+		randomgeneration: function() {
+			while(this.chosenNames.length < this.nameTotal) {
+			this.num = Math.floor(Math.random() * this.names.length);
+			this.inputName = this.names[this.num];
+			if (this.chosenNames.indexOf(this.inputName) === -1) {
+					this.chosenNames.push(this.inputName);
+				};
+			};	
+		},
 		switchlistone: function(index, name) {
 			this.eliminatedNames.push({text: name.text});
 			this.chosenNames.splice(index, 1);
@@ -49,4 +71,160 @@ let app = new Vue({
 })
 </script>
 </body>
+<style>
+	body {
+		background-color: #000000;
+	}
+	.start1 {
+		width: 400px;
+		height: 100px;
+		font-family: "Courier New";
+		font-size: 50px;
+		color: #ffffff;
+		background-color: #333333;
+		border: 3px solid #ffffff;
+		position: fixed;
+		font-weight: bold;
+		left: 37.5%;
+		top: 70%;
+	}
+	.start1:hover {
+		background-color: #26daeb;
+		color: #000000;
+		transition: 0.1s;
+	}
+	.start2 {
+		width: 400px;
+		height: 100px;
+		font-family: "Courier New";
+		font-size: 50px;
+		color: #ffffff;
+		background-color: #333333;
+		border: 3px solid #ffffff;
+		position: fixed;
+		font-weight: bold;
+		left: 37.5%;
+		top: 70%;
+		opacity: 0.3;
+	}
+	#introText {
+		color: #ffffff;
+		display: inline-block;
+		position: fixed;
+		font-family: "Courier New";
+		left: 28%;
+	}
+	#title {
+		font-size: 100px;
+		text-align: center;
+	}
+	#desc {
+		font-size: 30px;
+		text-align: center;
+	}
+	#credits {
+		position: fixed;
+		left: 92%;
+		top: 95%;
+	}
+	#credits2 {
+		position: fixed;
+		left: 1%;
+		top: 92%;
+		font-size: 30px;
+	}
+	#desc2 {
+		position: fixed;
+		left: 43%;
+		top: 44.5%;
+		font-size: 20px;
+	}
+	#warning {
+		position: fixed;
+		left: 37.25%;
+		top: 60%;
+		font-size: 20px;
+	}
+	#nameTotal {
+		position: fixed;
+		font-size: 30px;
+		left: 45%;
+		top: 50%;
+		width: 100px;
+		color: #ffffff;
+		background-color: #333333;
+		border: 3px solid #ffffff;
+		text-align: center;
+	}
+	#nameTotal:hover {
+		background-color: #555555;
+	}
+	input::-webkit-outer-spin-button,
+	input::-webkit-inner-spin-button {
+		-webkit-appearance: none;
+		margin: 0;
+	}
+	#nameList {
+		list-style-type: none;
+		font-family: "Courier";
+		color: #ffffff;
+		border: 2px solid #333333;
+		border-style: round;
+		padding: 8px;
+		position: fixed;
+		left: 30%;
+		top: 8%;
+		min-width: 205px;
+		display: inline-block;
+	}
+	#eliminatedList {
+		list-style-type: none;
+		font-family: "Courier";
+		color: #ffffff;
+		border: 2px solid #333333;
+		border-style: round;
+		padding: 8px;
+		display: inline-block;
+		position: fixed;
+		right: 30.25%;
+		top: 8%;
+		min-width: 320px;
+		float: right;
+	}
+	#header1 {
+		color: #ffffff;
+		display: inline-block;
+		position: fixed;
+		left: 30%;
+		font-family: "Courier";
+	}
+	#header2 {
+		color: #ffffff;
+		display: inline-block;
+		position: fixed;
+		right: 30%;
+		font-family: "Courier";
+		float: right;
+	}
+	.deleteButton {
+		background-color: #333333;
+		border: 1px solid #ffffff;
+		color: #ffffff;
+		font-family: "Verdana";
+	}
+	.deleteButton:hover {
+		background-color: #dc143c;
+		transition: 0.1s;
+	}
+	.returnButton {
+		background-color: #333333;
+		border: 1px solid #ffffff;
+		color: #ffffff;
+		font-family: "Verdana";
+	}
+	.returnButton:hover {
+		background-color: #28bf4e;
+		transition: 0.1s;
+	}
+</style>
 </html>
