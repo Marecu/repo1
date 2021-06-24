@@ -15,10 +15,10 @@
       <q-list>
         <div v-for="(item, index) in array" :key="index" class="row justify-start items-center">
           <div class="addbuttons">
-            <q-btn color="positive" @click="additem(index, item)">+</q-btn>
+            <q-btn color="positive" class="add" @click="additem(index, item)">+</q-btn>
           </div>
           <div class="addbuttons">
-            <q-btn color="negative" @click="removeitem(index, item)">-</q-btn>
+            <q-btn color="negative" class="remove" @click="removeitem(index, item)">-</q-btn>
           </div>
             <b>&nbsp;&nbsp;&nbsp;{{ item.text }}&nbsp;&nbsp;&nbsp;</b>
             <q-badge color="primary">x{{item.quantity}}</q-badge>
