@@ -1,0 +1,96 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/uikit@3.7.1/dist/css/uikit.min.css" />
+</head>
+<body>
+    <h1 class="header uk-margin-top">BRCamy Generator</h1>
+    <button class="go uk-align-center">GO</button>
+    <div class="uk-margin-xlarge-top">
+        <div class="preamble"></div>
+        <div class="text"></div>
+    </div>
+</body>
+<script>
+    const httpGet = (url) => {
+        var xmlHttp = new XMLHttpRequest();
+        xmlHttp.open( "GET", url, false );
+        xmlHttp.send( null );
+        return xmlHttp.responseText;
+    };
+
+    
+
+    $(document).on("click", ".go", function () {
+        $(".text").empty();
+        $(".preamble").empty();
+
+        messages = ["That's so hilarious,", "Great point,", "What's up,", "Go away,", "Is that the real", "Interesting perspective,", "No way,"];
+        let number = Math.floor(Math.random() * messages.length);
+        let message = messages[number];
+        let splitMessage = message.split(" ");
+        const preambleMessage = (i) => {
+            setTimeout(function () {
+                $(".preamble").append(`${splitMessage[i]} `)
+                i++;
+                if (splitMessage[i]) {
+                    preambleMessage(i);
+                } else {
+                    setTimeout(function () {
+                        let adjectiveB = httpGet("https://random-word-form.herokuapp.com/random/adjective/b").split("");
+                        adjectiveB.splice(adjectiveB.length - 2, 2);
+                        adjectiveB.splice(0, 2);
+                        adjectiveB[0] = adjectiveB[0].toUpperCase();
+                        adjectiveB = adjectiveB.join("");
+
+                        let nounR = httpGet("https://random-word-form.herokuapp.com/random/noun/r").split("");
+                        nounR.splice(nounR.length - 2, 2);
+                        nounR.splice(0, 2);
+                        nounR[0] = nounR[0].toUpperCase();
+                        nounR = nounR.join("");
+                        
+                        $(".text").append(`${adjectiveB} ${nounR} Camy`);
+                    }, 250);
+                }
+            }, 150)
+        }
+        preambleMessage(0);        
+    });
+    
+</script>
+<style>
+.html {
+    background-color: #000 !important;
+}
+.header {
+    text-align: center;
+    font-size: 100px;
+    font-family: "Trebuchet MS";
+}
+.go {
+    width: 100px;
+    height: 50px;
+    font-size: 30px;
+    border-radius: 5px;
+    border-color: #000;
+    box-shadow: -2px 2px rgb(45, 45, 45, 0.25);
+    background-color: #000;
+    color: #fff;
+}
+.go:hover {
+    background-color: #34e;
+    border-color: #34e;
+    transition: 0.1s;
+}
+.text {
+    font-size: 100px;
+    text-align: center;
+    font-weight: bold;
+}
+.preamble {
+    font-size: 75px;
+    text-align: center;
+}
+</style>
+</html>
