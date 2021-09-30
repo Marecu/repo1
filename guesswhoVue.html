@@ -1,35 +1,48 @@
 <!DOCTYPE html>
 <html>
-<script src="https://cdn.jsdelivr.net/npm/vue@2.6.12/dist/vue.js"></script>
+<head>
+	<title>WCS Guess Who</title>
+	<link rel="icon" href="https://www.dictionary.com/e/wp-content/uploads/2018/03/Thinking_Face_Emoji-Emoji-Island.png" />
+	<script src="https://cdn.jsdelivr.net/npm/vue@2.6.12/dist/vue.js"></script>
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/uikit@3.7.1/dist/css/uikit.min.css" />
+</head>
 <body>
 <div id="app">
 	<div v-if="!showlists">
-		<div id="introText">
-			<h1 id="title">WCS Guess Who</h1>
-			<p id="desc">Click start to play!</p>
-			<p id="desc2">Number of names:</p>
-			<p id="credits">Made by Marcus</p>
-			<p id="credits2">V2.0</p>
-			<p id="warning" v-if="nameTotal > names.length || nameTotal <= 1">Name total must be between 2 and 93</p>
+		<div class="uk-grid introContainer">
+			<h1 id="title" class="uk-width-1-1 uk-margin-large-top header">WCS Guess Who</h1>
+			<p id="desc" class="uk-width-1-1 uk-margin-large">Click start to play!</p>
+			<div class="uk-width-1-1 uk-position-bottom">
+				<label class="uk-margin names">Number of names:</label><br /><br />
+				<input type="number" id="nameTotal" v-model="nameTotal"><br /><br />
+				<label id="warning" v-if="nameTotal > names.length || nameTotal <= 1" class="uk-width-1-1 uk-margin">Name total must be between 2 and 93</label><br /><br />
+				<button @click="reveal(); randomgeneration();" :class="[nameTotal > names.length ? 'start2' : nameTotal <= 1 ? 'start2' : 'start1']" :disabled="nameTotal > names.length || nameTotal <= 1" class="uk-margin-large-bottom">Start</button>
+			</div>
 		</div>
-		<button @click="reveal(); randomgeneration();" :class="[nameTotal > names.length ? 'start2' : nameTotal <= 1 ? 'start2' : 'start1']" :disabled="nameTotal > names.length || nameTotal <= 1">Start</button>
-		<input type="number" id="nameTotal" v-model="nameTotal">
+		<p id="credits" class="uk-position-bottom-right uk-padding-small credits">Made by Marcus</p>
+		<p id="credits2" class="uk-position-bottom-left uk-padding-small credits">V2.1</p>
 	</div>
 	<div v-if="showlists">
-		<h1 id="header1">People left:</h1>
-		<ul id="nameList">
-			<li v-for="(name, index) in chosenNames" v-bind:name="name">
-				<button class="deleteButton" @click="switchlistone(index, name)">✗</button>
-				{{ name.text }}
-			</li>
-		</ul>
-		<h1 id="header2" v-if="eliminatedNames.length > 0">People eliminated:</h1>
-		<ul id="eliminatedList" v-if="eliminatedNames.length > 0">
-			<li v-for="(name, index) in eliminatedNames" v-bind:name="name">
-				<button class="returnButton" @click="switchlisttwo(index, name)">✓</button>
-				{{ name.text }}
-			</li>
-		</ul>
+		<div class="uk-grid uk-align-center nameBox">
+			<div class="uk-width-1-2 listDiv nameList">
+				<h1 class="header uk-margin-top">People<br />left:</h1><br />
+				<ul class="uk-width-2-5 lists" v-show="chosenNames.length > 0">
+					<li v-for="(name, index) in chosenNames" v-bind:name="name">
+						<button class="deleteButton switchButton" @click="switchlistone(index, name)">✗</button>
+						{{ name.text }}
+					</li>
+				</ul>
+			</div>
+			<div class="uk-width-1-2 listDiv">
+				<h1 class="header uk-margin-top">People eliminated:</h1><br />
+				<ul class="uk-width-2-5 lists" v-show="eliminatedNames.length > 0">
+					<li v-for="(name, index) in eliminatedNames" v-bind:name="name">
+						<button class="returnButton switchButton" @click="switchlisttwo(index, name)">✓</button>
+						{{ name.text }}
+					</li>
+				</ul>
+			</div>
+		</div>
 	</div>
 </div>
 <script>
@@ -72,8 +85,34 @@ let app = new Vue({
 </script>
 </body>
 <style>
+	html {
+		height: 100%;
+	}
 	body {
-		background-color: #000000;
+		background: #000000;
+		min-height: 100vh;
+	}
+	.introContainer {
+		color: #fff;
+		font-family: "Courier New";
+		text-align: center;
+	}
+	#title {
+		font-size: 6em;
+	}
+	.credits {
+		margin: 0px;
+		color: #fff;
+		font-family: "Courier New";
+	}
+	.names {
+		font-size: 1.25em;
+	}
+	#desc {
+		font-size: 2em;
+	}
+	.start {
+		padding-left: 0px;
 	}
 	.start1 {
 		width: 400px;
@@ -83,10 +122,7 @@ let app = new Vue({
 		color: #ffffff;
 		background-color: #333333;
 		border: 3px solid #ffffff;
-		position: fixed;
 		font-weight: bold;
-		left: 37.5%;
-		top: 70%;
 	}
 	.start1:hover {
 		background-color: #26daeb;
@@ -101,55 +137,16 @@ let app = new Vue({
 		color: #ffffff;
 		background-color: #333333;
 		border: 3px solid #ffffff;
-		position: fixed;
 		font-weight: bold;
-		left: 37.5%;
-		top: 70%;
 		opacity: 0.3;
 	}
-	#introText {
-		color: #ffffff;
-		display: inline-block;
-		position: fixed;
+	.header {
+		color: #fff;
 		font-family: "Courier New";
-		left: 28%;
-	}
-	#title {
-		font-size: 100px;
-		text-align: center;
-	}
-	#desc {
-		font-size: 30px;
-		text-align: center;
-	}
-	#credits {
-		position: fixed;
-		left: 92%;
-		top: 95%;
-	}
-	#credits2 {
-		position: fixed;
-		left: 1%;
-		top: 92%;
-		font-size: 30px;
-	}
-	#desc2 {
-		position: fixed;
-		left: 43%;
-		top: 44.5%;
-		font-size: 20px;
-	}
-	#warning {
-		position: fixed;
-		left: 37.25%;
-		top: 60%;
-		font-size: 20px;
+		font-weight: bold;
 	}
 	#nameTotal {
-		position: fixed;
 		font-size: 30px;
-		left: 45%;
-		top: 50%;
 		width: 100px;
 		color: #ffffff;
 		background-color: #333333;
@@ -164,49 +161,33 @@ let app = new Vue({
 		-webkit-appearance: none;
 		margin: 0;
 	}
-	#nameList {
+	.nameBox {
+		display: flex;
+		align-content: center;
+		width: 1000px;
+		text-align: center;
+	}
+	.lists {
 		list-style-type: none;
 		font-family: "Courier";
 		color: #ffffff;
 		border: 2px solid #333333;
 		border-style: round;
-		padding: 8px;
-		position: fixed;
-		left: 30%;
-		top: 8%;
-		min-width: 205px;
-		display: inline-block;
-	}
-	#eliminatedList {
-		list-style-type: none;
-		font-family: "Courier";
-		color: #ffffff;
-		border: 2px solid #333333;
-		border-style: round;
+		border-radius: 5px;
 		padding: 8px;
 		display: inline-block;
-		position: fixed;
-		right: 30.25%;
-		top: 8%;
-		min-width: 320px;
-		float: right;
+		text-align: left;
+		margin-top: 0px;
 	}
-	#header1 {
-		color: #ffffff;
-		display: inline-block;
-		position: fixed;
-		left: 30%;
-		font-family: "Courier";
+	.listDiv {
+		padding-right: 40px;
 	}
-	#header2 {
-		color: #ffffff;
-		display: inline-block;
-		position: fixed;
-		right: 30%;
-		font-family: "Courier";
-		float: right;
+	.nameList {
+		border-right: 2px solid #fff;
+		min-height: 100vh;
+		padding-bottom: 20px;
 	}
-	.deleteButton {
+	.switchButton {
 		background-color: #333333;
 		border: 1px solid #ffffff;
 		color: #ffffff;
@@ -215,12 +196,6 @@ let app = new Vue({
 	.deleteButton:hover {
 		background-color: #dc143c;
 		transition: 0.1s;
-	}
-	.returnButton {
-		background-color: #333333;
-		border: 1px solid #ffffff;
-		color: #ffffff;
-		font-family: "Verdana";
 	}
 	.returnButton:hover {
 		background-color: #28bf4e;

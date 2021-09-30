@@ -62,6 +62,7 @@ export default {
 <style>
 .items {
   padding-top: 10px;
+  max-height: 20%;
 }
 .inputs {
   padding-bottom: 30px;
