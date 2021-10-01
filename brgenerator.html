@@ -20,9 +20,8 @@
         return xmlHttp.responseText;
     };
 
-    
-
     $(document).on("click", ".go", function () {
+        $(".go").attr("disabled", true);
         $(".text").empty();
         $(".preamble").empty();
 
@@ -51,6 +50,7 @@
                         nounR = nounR.join("");
                         
                         $(".text").append(`${adjectiveB} ${nounR} Camy`);
+                        $(".go").attr("disabled", false);
                     }, 250);
                 }
             }, 150)
