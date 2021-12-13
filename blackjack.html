@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/uikit@3.7.1/dist/css/uikit.min.css" />
+</head>
+<body>
+    <div class="title">
+        Blackjack
+    </div>
+    <div class="pregame">
+        <button class="start">Play</button>
+    </div>
+    <div class="gameboard hide">
+        <div class="playerParent parent">
+            Your Cards:
+            <div id="player" class="player cardHolder"></div>
+            <div class="playerSum sum"></div>
+        </div>
+        <div class="dealerParent parent">
+            Dealer's Cards:
+            <div class="dealer cardHolder"></div>
+            <div class="dealerSum sum"></div>
+        </div>
+        <div class="buttons">
+            <button class="hit">Hit</button>
+            <button class="stand">Stand</button>
+        </div>
+    </div>
+</body>
+<script>
+    //card RNG
+    let cardsInPlay = [];
+    const cardGen = (num) => {
+        let cards = [];
+        let suits = ["◆", "♣", "♥", "♠"];
+        let numbers = ["2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K", "A"];
+        for (i = 0; i < num; i++) {
+            let suit = suits[Math.floor(Math.random() * 4)];
+            let number = numbers[Math.floor(Math.random() * 13)];
+            if (cardsInPlay.indexOf(`${number} ${suit} `) === -1) {
+                cards.push(`${number} ${suit} `);
+                cardsInPlay.push(`${number} ${suit} `);
+            } else {
+                i--;
+            };
+        };
+        return cards;
+    };
+
+    //sum calculator
+    const calculateSum = (selector, endGame) => {
+        if ($(selector)[0].innerHTML.indexOf("A") > -1) {
+            let aces = $(selector)[0].innerHTML.split(" ").filter(string => string.includes("A"));
+            let numbers = $(selector)[0].innerHTML.split(" ").filter(string => /[A-Z0-9]/.test(string));
+            for (let i = 0; i < numbers.length; i++) {
+                if (parseInt(numbers[i])) {
+                    numbers[i] = parseInt(numbers[i]);
+                } else if (numbers[i] === "A") {
+                    //this step is just to filter out the A case for disambiguation
+                } else {
+                    numbers[i] = 10;
+                };
+            };
+            let lowerSum = aces.length;
+            let upperSum = 11 + (aces.length - 1);
+            if (numbers.length > 1 && numbers.filter(string => /[0-9]/.test(string)).length > 0) {
+                lowerSum += numbers.filter(string => /[0-9]/.test(string)).reduce((a, b) => a + b);
+                upperSum += numbers.filter(string => /[0-9]/.test(string)).reduce((a, b) => a + b);
+            };
+            if (upperSum > 21) {
+                return lowerSum;
+            } else if (upperSum === 21) {
+                return upperSum;
+            } else {
+                if (endGame || selector !== ".dealer") {
+                    return `${lowerSum} or ${upperSum}`;
+                } else {
+                    return upperSum;
+                };
+            };
+        } else {
+            let numbers = $(selector)[0].innerHTML.split(" ").filter(string => /[A-Z0-9]/.test(string));
+            for (let i = 0; i < numbers.length; i++) {
+                if (parseInt(numbers[i])) {
+                    numbers[i] = parseInt(numbers[i]);
+                } else {
+                    numbers[i] = 10;
+                };
+            };
+            return numbers.reduce((a, b) => a + b);
+        };
+    };
+
+    //win/lose tester
+    const winLoss = () => {
+        let playerSum = calculateSum(".player", false);
+        if (playerSum > 21) {
+            alert("You lost");
+        } else if (playerSum === 21) {
+            let playerLength = $(".player")[0].innerHTML.split(" ").filter(string => /[A-Z0-9]/.test(string)).length;
+            if (playerLength === 2) {
+                alert("Blackjack!")
+            } else {
+                alert("You won!")
+            };
+        };
+    };
+
+    //end of game comparison
+    const contest = () => {
+        let playerSum = calculateSum(".player", true);
+        let dealerSum = calculateSum(".dealer", true);
+        if (playerSum > dealerSum || dealerSum > 21) {
+            alert("You won!");
+        } else if (playerSum === dealerSum) {
+            alert("Push");
+        } else {
+            alert("You lost");
+        };
+    };
+
+    //start game, generates cards for both player and dealer
+    $(document).on("click", ".start", function () {
+        cardsInPlay = [];
+        $(".gameboard").removeClass("hide");
+        $(".pregame").addClass("hide");
+        $(".dealer").empty().append(cardGen(1));
+        $(".player").empty().append(cardGen(2));
+        $(".playerSum").empty().append(`Total: ${calculateSum(".player", false)}`);
+        $(".dealerSum").empty().append(`Total: ${calculateSum(".dealer", false)}`);
+        winLoss();
+    });
+
+    //hit function
+    $(document).on("click", ".hit", function () {
+        $(".player").append(cardGen(1));
+        $(".playerSum").empty().append(`Total: ${calculateSum(".player", false)}`);
+        winLoss();
+    });
+
+    //stand function
+    $(document).on("click", ".stand", function () {
+        let dealerSum = calculateSum(".dealer", false);
+        const updateDealer = () => {
+            $(".dealer").append(cardGen(1));
+            $(".dealerSum").empty().append(`Total: ${calculateSum(".dealer", false)}`);
+            dealerSum = calculateSum(".dealer", false);
+        }
+        const dealerUpdateDelay = () => {
+            updateDealer();
+            setTimeout(function () {
+                if (dealerSum < 17) {
+                    dealerUpdateDelay();
+                } else {
+                    contest();
+                };
+            }, 1000);
+        };
+        dealerUpdateDelay();
+    });
+</script>
+<style>
+    html {
+        background-color: #222;
+        font-family: "Verdana";
+    }
+    .title {
+        margin-left: auto;
+        margin-right: auto;
+        margin-top: 2%;
+        font-size: 70px;
+        color: #ccc;
+        text-align: center;
+    }
+    .start {
+        width: 150px;
+        height: 75px;
+        background-color: #bbb;
+        margin-top: 5%;
+        margin-left: auto;
+        margin-right: auto;
+        display: block;
+        font-size: 50px;
+        font-family: "Verdana";
+        padding-bottom: 7px;
+    }
+    .start:hover {
+        background-color: #bbfaee;
+        transition: 0.1s;
+    }
+    .gameboard {
+        margin-left: auto;
+        margin-right: auto;
+        margin-top: 5%;
+        width: 60%;
+        text-align: center;
+        font-size: 50px;
+        color: #222;
+        display: flex;
+        flex-wrap: wrap;
+    }
+    .parent {
+        width: 48%;
+        margin: 5px;
+        border: 2px solid #a3a3a3;
+        border-radius: 3px;
+        background-color: #aaa;
+        padding-bottom: 70px;
+        position: relative;
+    }
+    .sum {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+    }
+    .buttons {
+        width: 100%;
+    }
+    .hit {
+        width: 150px;
+        height: 75px;
+        background-color: #bbb;
+        font-size: 45px;
+        font-family: "Verdana";
+    }
+    .stand {
+        width: 150px;
+        height: 75px;
+        background-color: #bbb;
+        font-size: 45px;
+        font-family: "Verdana";
+    }
+    .hide {
+        display: none;
+    }
+</style>
+</html>
