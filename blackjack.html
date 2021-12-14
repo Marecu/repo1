@@ -23,8 +23,10 @@
             <div class="dealerSum sum"></div>
         </div>
         <div class="buttons">
-            <button class="hit">Hit</button>
-            <button class="stand">Stand</button>
+            <button class="hit button">Hit</button>
+            <button class="stand button">Stand</button>
+            <button class="doubleDown button">Double Down</button>
+            <button class="split button">Split</button>
         </div>
     </div>
 </body>
@@ -102,7 +104,7 @@
             if (playerLength === 2) {
                 alert("Blackjack!")
             } else {
-                alert("You won!")
+                contest();
             };
         };
     };
@@ -193,15 +195,15 @@
         margin-left: auto;
         margin-right: auto;
         margin-top: 5%;
-        width: 60%;
         text-align: center;
         font-size: 50px;
         color: #222;
         display: flex;
         flex-wrap: wrap;
+        justify-content: center;
     }
     .parent {
-        width: 48%;
+        width: 30%;
         margin: 5px;
         border: 2px solid #a3a3a3;
         border-radius: 3px;
@@ -217,20 +219,19 @@
     }
     .buttons {
         width: 100%;
+        display: flex;
+        justify-content: center;
     }
-    .hit {
+    .button {
         width: 150px;
         height: 75px;
         background-color: #bbb;
         font-size: 45px;
         font-family: "Verdana";
+        margin: 5px;
     }
-    .stand {
-        width: 150px;
-        height: 75px;
-        background-color: #bbb;
-        font-size: 45px;
-        font-family: "Verdana";
+    .doubleDown {
+        font-size: 30px;
     }
     .hide {
         display: none;
