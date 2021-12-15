@@ -108,12 +108,13 @@
     const winLoss = () => {
         let playerSum = calculateSum(".player", false);
         if (playerSum > 21) {
-            alert("You lost");
+            clearNotif();
+            $(".notification").removeClass("hide").append(`You lost <br> Click to play again`);
         } else if (playerSum === 21) {
             let playerLength = $(".player")[0].innerHTML.split(" ").filter(string => /[A-Z0-9]/.test(string)).length;
             if (playerLength === 2) {
                 clearNotif();
-                $(".notification").removeClass("hide").append("Blackjack!");
+                $(".notification").removeClass("hide").append(`Blackjack! <br> Click to play again`);
                 money += Math.round(bet * 2.5);
                 updateMoney();
             } else {
@@ -128,22 +129,22 @@
         let dealerSum = calculateSum(".dealer", true);
         if (playerSum > dealerSum || dealerSum > 21) {
             clearNotif();
-            $(".notification").removeClass("hide").append("You won!");
+            $(".notification").removeClass("hide").append(`You won! <br> Click to play again`);
             money += (bet * 2);
             updateMoney();
         } else if (playerSum === dealerSum) {
             clearNotif();
-            $(".notification").removeClass("hide").append("Push");
+            $(".notification").removeClass("hide").append(`Push <br> Click to play again`);
+            money += bet;
         } else {
             clearNotif();
-            $(".notification").removeClass("hide").append("You lost");
+            $(".notification").removeClass("hide").append(`You lost <br> Click to play again`);
         };
     };
 
     //start game, generates cards for both player and dealer
     $(document).on("click", ".start", function () {
         bet = Math.round(parseInt($(".bet")[0].value));
-        console.log(bet);
         if (!bet || bet <= 0) {
             $(".error").empty().removeClass("hide").append("Please enter a bet");
         } else {
@@ -191,6 +192,47 @@
             }, 1000);
         };
         dealerUpdateDelay();
+    });
+
+    //double down function
+    $(document).on("click", ".doubleDown", function () {
+        money -= bet;
+        bet = bet * 2;
+        updateMoney();
+        $(".player").append(cardGen(1));
+        $(".playerSum").empty().append(`Total: ${calculateSum(".player", false)}`);
+        winLoss();
+        const ddStand = () => {
+            let playerSum = calculateSum(".player", true);
+            if (playerSum <= 21) {
+                let dealerSum = calculateSum(".dealer", false);
+                const updateDealer = () => {
+                    $(".dealer").append(cardGen(1));
+                    $(".dealerSum").empty().append(`Total: ${calculateSum(".dealer", false)}`);
+                    dealerSum = calculateSum(".dealer", false);
+                }
+                const dealerUpdateDelay = () => {
+                    updateDealer();
+                    setTimeout(function () {
+                        if (dealerSum < 17) {
+                            dealerUpdateDelay();
+                        } else {
+                            contest();
+                        };
+                    }, 1000);
+                };
+                dealerUpdateDelay();
+            };
+        };
+        setTimeout(ddStand, 1000);
+    });
+
+    //restart game
+    $(document).on("click", ".notification", function () {
+        $(".gameboard").addClass("hide");
+        $(".notification").addClass("hide");
+        $(".pregame").removeClass("hide");
+        bet = null;
     });
 
     //clear notification box
@@ -340,8 +382,14 @@
         padding: 10px;
         border: 2px solid #ccc;
         text-align: center;
-        font-size: 2em;
+        font-size: 1em;
         color: #ccc;
+    }
+    .notification:hover {
+        background-color: #bbfaee;
+        border-color: #bbfaee;
+        color: #222;
+        transition: 0.1s;
     }
     .hide {
         display: none;
