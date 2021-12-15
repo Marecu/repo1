@@ -8,8 +8,15 @@
     <div class="title">
         Blackjack
     </div>
+    <div class="moneyCount">
+        Current money:<br>
+        <span class="money">100</span>
+    </div>
     <div class="pregame">
+        <span class="betText">Your bet:</span>
+        <input type="number" class="bet"/>
         <button class="start">Play</button>
+        <div class="error hide"></div>
     </div>
     <div class="gameboard hide">
         <div class="playerParent parent">
@@ -28,11 +35,14 @@
             <button class="doubleDown button">Double Down</button>
             <button class="split button">Split</button>
         </div>
+        <div class="notification hide"></div>
     </div>
 </body>
 <script>
     //card RNG
     let cardsInPlay = [];
+    let money = parseInt($(".money")[0].innerHTML);
+    let bet;
     const cardGen = (num) => {
         let cards = [];
         let suits = ["◆", "♣", "♥", "♠"];
@@ -75,10 +85,10 @@
             } else if (upperSum === 21) {
                 return upperSum;
             } else {
-                if (endGame || selector !== ".dealer") {
-                    return `${lowerSum} or ${upperSum}`;
-                } else {
+                if (selector === ".dealer" || endGame) {
                     return upperSum;
+                } else {
+                    return `${lowerSum} or ${upperSum}`;
                 };
             };
         } else {
@@ -102,7 +112,10 @@
         } else if (playerSum === 21) {
             let playerLength = $(".player")[0].innerHTML.split(" ").filter(string => /[A-Z0-9]/.test(string)).length;
             if (playerLength === 2) {
-                alert("Blackjack!")
+                clearNotif();
+                $(".notification").removeClass("hide").append("Blackjack!");
+                money += Math.round(bet * 2.5);
+                updateMoney();
             } else {
                 contest();
             };
@@ -114,24 +127,42 @@
         let playerSum = calculateSum(".player", true);
         let dealerSum = calculateSum(".dealer", true);
         if (playerSum > dealerSum || dealerSum > 21) {
-            alert("You won!");
+            clearNotif();
+            $(".notification").removeClass("hide").append("You won!");
+            money += (bet * 2);
+            updateMoney();
         } else if (playerSum === dealerSum) {
-            alert("Push");
+            clearNotif();
+            $(".notification").removeClass("hide").append("Push");
         } else {
-            alert("You lost");
+            clearNotif();
+            $(".notification").removeClass("hide").append("You lost");
         };
     };
 
     //start game, generates cards for both player and dealer
     $(document).on("click", ".start", function () {
-        cardsInPlay = [];
-        $(".gameboard").removeClass("hide");
-        $(".pregame").addClass("hide");
-        $(".dealer").empty().append(cardGen(1));
-        $(".player").empty().append(cardGen(2));
-        $(".playerSum").empty().append(`Total: ${calculateSum(".player", false)}`);
-        $(".dealerSum").empty().append(`Total: ${calculateSum(".dealer", false)}`);
-        winLoss();
+        bet = Math.round(parseInt($(".bet")[0].value));
+        console.log(bet);
+        if (!bet || bet <= 0) {
+            $(".error").empty().removeClass("hide").append("Please enter a bet");
+        } else {
+            if (bet <= money) {
+            money -= bet;
+            updateMoney();
+            cardsInPlay = [];
+            $(".gameboard").removeClass("hide");
+            $(".pregame").addClass("hide");
+            $(".dealer").empty().append(cardGen(1));
+            $(".player").empty().append(cardGen(2));
+            $(".playerSum").empty().append(`Total: ${calculateSum(".player", false)}`);
+            $(".dealerSum").empty().append(`Total: ${calculateSum(".dealer", false)}`);
+            $(".error").addClass("hide");
+            winLoss();
+            } else {
+                $(".error").empty().removeClass("hide").append("Your bet cannot exceed your total money");
+            };
+        };
     });
 
     //hit function
@@ -161,11 +192,24 @@
         };
         dealerUpdateDelay();
     });
+
+    //clear notification box
+    const clearNotif = () => {
+        $(".notification").empty()
+    };
+
+    //update money score
+    const updateMoney = () => {
+        $(".money")[0].innerHTML = money;
+    };
 </script>
 <style>
     html {
         background-color: #222;
         font-family: "Verdana";
+    }
+    .pregame {
+        height: 100vh;
     }
     .title {
         margin-left: auto;
@@ -175,9 +219,47 @@
         color: #ccc;
         text-align: center;
     }
+    .betText {
+        margin-left: auto;
+        margin-right: auto;
+        margin-top: 3%;
+        display: block;
+        text-align: center;
+        color: #ccc;
+        font-size: 1.25em;
+    }
+    .bet {
+        margin-left: auto;
+        margin-right: auto;
+        display: block;
+        width: 100px;
+        height: 50px;
+        background-color: #aaa;
+        color: #000;
+        font-size: 40px;
+        text-align: center;
+    }
+    input::-webkit-outer-spin-button,
+	input::-webkit-inner-spin-button {
+		-webkit-appearance: none;
+		margin: 0;
+	}
+    .moneyCount {
+        text-align: center;
+        font-size: 1.75em;
+        color: #ccc;
+        position: absolute;
+        right: 3%;
+        top: 7%;
+        border: 2px solid #ccc;
+        border-radius: 5px;
+        padding: 5px;
+    }
     .start {
         width: 150px;
         height: 75px;
+        border: 2px solid #222;
+        border-radius: 8px;
         background-color: #bbb;
         margin-top: 5%;
         margin-left: auto;
@@ -190,6 +272,18 @@
     .start:hover {
         background-color: #bbfaee;
         transition: 0.1s;
+    }
+    .error {
+        margin-left: auto;
+        margin-right: auto;
+        margin-top: 5%;
+        display: block;
+        width: 40%;
+        padding: 10px;
+        border: 2px solid #ff0000;
+        text-align: center;
+        font-size: 2em;
+        color: #ff0000;
     }
     .gameboard {
         margin-left: auto;
@@ -230,8 +324,24 @@
         font-family: "Verdana";
         margin: 5px;
     }
+    .button:hover {
+        transition: 0.5s;
+        box-shadow: inset 150px 0 0 0 #37a354;
+    }
     .doubleDown {
         font-size: 30px;
+    }
+    .notification {
+        margin-left: auto;
+        margin-right: auto;
+        margin-top: 5%;
+        display: block;
+        width: 40%;
+        padding: 10px;
+        border: 2px solid #ccc;
+        text-align: center;
+        font-size: 2em;
+        color: #ccc;
     }
     .hide {
         display: none;
