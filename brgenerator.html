@@ -28,10 +28,10 @@
         messages = ["That's so hilarious,", "Great point,", "What's up,", "Go away,", "Is that the real", "Interesting perspective,", "No way,"];
         let number = Math.floor(Math.random() * messages.length);
         let message = messages[number];
-        let splitMessage = message.split(" ");
+        let splitMessage = message.split("");
         const preambleMessage = (i) => {
             setTimeout(function () {
-                $(".preamble").append(`${splitMessage[i]} `)
+                $(".preamble").append(`${splitMessage[i]}`)
                 i++;
                 if (splitMessage[i]) {
                     preambleMessage(i);
@@ -53,7 +53,7 @@
                         $(".go").attr("disabled", false);
                     }, 250);
                 }
-            }, 150)
+            }, 40)
         }
         preambleMessage(0);        
     });
