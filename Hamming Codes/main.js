@@ -8,9 +8,9 @@ const toggleBox = (box) => {
 /*
 For an n x n Hamming square,
 
-2log(n) parity squares
+2log2(n) parity squares
 
-log(n) squares for columns/rows
+log2(n) squares for columns/rows
 
 COLUMN GENERAL FORMULA:
     for i (starting at 1) columns:
@@ -61,4 +61,29 @@ const generateBoxes = (n) => {
 };
 
 generateBoxes(4);
+
+
+//Highlighting parity groups when key value is hovered
+const highlightParityGroup = (box) => {
+    let parityClass = box.classList[2];
+    let elementsToUpdate = document.getElementsByClassName(parityClass);
+    for (let i = 0; i < elementsToUpdate.length; i++) {
+        elementsToUpdate[i].classList.add("highlightedBox");
+    };
+};
+
+const removeHighlight = (box) => {
+    let parityClass = box.classList[2];
+    let elementsToUpdate = document.getElementsByClassName(parityClass);
+    for (let i = 0; i < elementsToUpdate.length; i++) {
+        elementsToUpdate[i].classList.remove("highlightedBox");
+    };
+};
+
+let parities = document.getElementsByClassName("parityValue");
+for (let i = 0; i < parities.length; i++) {
+    parities[i].addEventListener("mouseover", function () {highlightParityGroup(parities[i])})
+    parities[i].addEventListener("mouseout", function () {removeHighlight(parities[i])})
+};
+
 
