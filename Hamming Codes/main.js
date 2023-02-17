@@ -1,7 +1,21 @@
+/*
+=-=-=-=-=-=-=-=-=-=-=-=-=-=
+          THE PLAN
+=-=-=-=-=-=-=-=-=-=-=-=-=-=
+
+1) Intro page with descriptions of everything (will prob need to rewatch video)
+2) 4x4 hamming code page with description of what's going on
+3) nxn hamming code page to play around with
+4) Intro to programming page (show how each box corresponds to a binary position)
+5) XOR representation page with hardcoded 4x4
+*/
+
+
+
 const toggleBox = (box) => {
     let boxes = document.getElementsByClassName("box");
     let current = parseInt(boxes[box].dataset.num);
-    boxes[box].style.backgroundImage = `url(assets/${current ^ 1}.png)`;
+    boxes[box].style.backgroundImage = `url(assets/${current ^ 1}.PNG)`;
     boxes[box].setAttribute("data-num", current ^ 1);
 };
 
@@ -22,6 +36,36 @@ ROW GENERAL FORMULA:
     Math.floor(i / (n * 2^(i - 1))) % 2 === 1
 */
 
+//Make the grid into a valid Hamming square
+const createValidParityGroups = (n) => {
+    for (let i = 0; i < n; i++) {
+        //columns
+        let columnGroup = document.getElementsByClassName(`column${i}`);
+        columnGroup = Array.prototype.slice.call(columnGroup).map(x => parseInt(x.dataset.num));
+        let columnSum = columnGroup.reduce((x, y) => x + y);
+        if (columnSum % 2 === 1) {
+            let parityElement = document.getElementsByClassName(`parityValue column${i}`)[0]
+            parityElement.onclick.apply();
+        };
+
+        //rows
+        let rowGroup = document.getElementsByClassName(`row${i}`);
+        rowGroup = Array.prototype.slice.call(rowGroup).map(x => parseInt(x.dataset.num));
+        let rowSum = rowGroup.reduce((x, y) => x + y);
+        if (rowSum % 2 === 1) {
+            let parityElement = document.getElementsByClassName(`parityValue row${i}`)[0]
+            parityElement.onclick.apply();
+        };
+    };
+    //total box
+    let boxes = document.getElementsByClassName("box");
+    boxes = Array.prototype.slice.call(boxes).map(x => parseInt(x.dataset.num));
+    let totalSum = boxes.reduce((x, y) => x + y);
+    if (totalSum % 2 === 1) {
+        let parityElement = document.getElementsByClassName(`boxParityValue`)[0]
+        parityElement.onclick.apply();
+    };
+};
 
 //Generate n x n Hamming square (n must be power of 2)
 const generateBoxes = (n) => {
@@ -56,7 +100,7 @@ const generateBoxes = (n) => {
         div.setAttribute("onclick", `toggleBox(${i})`);
         div.setAttribute("data-num", boxNum);
         //styling stuff
-        div.style.backgroundImage = `url(assets/${boxNum}.png)`;
+        div.style.backgroundImage = `url(assets/${boxNum}.PNG)`;
         div.style.backgroundRepeat = "no-repeat";
         div.style.backgroundSize = "contain";
         div.style.boxShadow = `inset 0 0 ${80 / n}px #666`
@@ -65,9 +109,14 @@ const generateBoxes = (n) => {
     result.forEach(x => parent.appendChild(x));
     parent.style.gridTemplateRows = `repeat(${n}, minmax(0, 1fr))`;
     parent.style.gridTemplateColumns = `repeat(${n}, minmax(0, 1fr))`;
+    parent.style.gap = `${8 / Math.log2(n)}px`;
+
+    createValidParityGroups(Math.log2(n));
 };
 
 generateBoxes(4);
+
+
 
 
 //Highlighting parity groups when parity value is hovered
