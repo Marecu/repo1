@@ -1,7 +1,8 @@
 const toggleBox = (box) => {
     let boxes = document.getElementsByClassName("box");
-    let current = parseInt(boxes[box].innerText);
-    boxes[box].innerText = current ^ 1;
+    let current = parseInt(boxes[box].dataset.num);
+    boxes[box].style.backgroundImage = `url(assets/${current ^ 1}.png)`;
+    boxes[box].setAttribute("data-num", current ^ 1);
 };
 
 
@@ -49,26 +50,39 @@ const generateBoxes = (n) => {
                 classes += `row${k} `;
             };
         };
+        let boxNum = Math.round(Math.random());
         let div = document.createElement("div");
         div.className = classes.trim();
         div.setAttribute("onclick", `toggleBox(${i})`);
-        div.innerText = Math.round(Math.random());
+        div.setAttribute("data-num", boxNum);
+        //styling stuff
+        div.style.backgroundImage = `url(assets/${boxNum}.png)`;
+        div.style.backgroundRepeat = "no-repeat";
+        div.style.backgroundSize = "contain";
+        div.style.boxShadow = `inset 0 0 ${80 / n}px #666`
         result.push(div);
     };
     result.forEach(x => parent.appendChild(x));
-    parent.style.gridTemplateRows = `repeat(${n}, 1fr)`;
-    parent.style.gridTemplateColumns = `repeat(${n}, 1fr)`;
+    parent.style.gridTemplateRows = `repeat(${n}, minmax(0, 1fr))`;
+    parent.style.gridTemplateColumns = `repeat(${n}, minmax(0, 1fr))`;
 };
 
 generateBoxes(4);
 
 
-//Highlighting parity groups when key value is hovered
+//Highlighting parity groups when parity value is hovered
 const highlightParityGroup = (box) => {
     let parityClass = box.classList[2];
     let elementsToUpdate = document.getElementsByClassName(parityClass);
     for (let i = 0; i < elementsToUpdate.length; i++) {
         elementsToUpdate[i].classList.add("highlightedBox");
+    };
+};
+
+const highlightAll = () => {
+    let boxes = document.getElementsByClassName("box");
+    for (let i = 0; i < boxes.length; i++) {
+        boxes[i].classList.add("highlightedBox");
     };
 };
 
@@ -80,10 +94,19 @@ const removeHighlight = (box) => {
     };
 };
 
+const removeHighlightAll = () => {
+    let boxes = document.getElementsByClassName("box");
+    for (let i = 0; i < boxes.length; i++) {
+        boxes[i].classList.remove("highlightedBox");
+    };
+};
+
 let parities = document.getElementsByClassName("parityValue");
 for (let i = 0; i < parities.length; i++) {
     parities[i].addEventListener("mouseover", function () {highlightParityGroup(parities[i])})
     parities[i].addEventListener("mouseout", function () {removeHighlight(parities[i])})
 };
+document.getElementsByClassName("boxParityValue")[0].addEventListener("mouseover", function () {highlightAll()});
+document.getElementsByClassName("boxParityValue")[0].addEventListener("mouseout", function () {removeHighlightAll()});
 
 
