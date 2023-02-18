@@ -41,7 +41,7 @@ const createValidParityGroups = (n) => {
     for (let i = 0; i < n; i++) {
         //columns
         let columnGroup = document.getElementsByClassName(`column${i}`);
-        columnGroup = Array.prototype.slice.call(columnGroup).map(x => parseInt(x.dataset.num));
+        columnGroup = Array.from(columnGroup).map(x => parseInt(x.dataset.num));
         let columnSum = columnGroup.reduce((x, y) => x + y);
         if (columnSum % 2 === 1) {
             let parityElement = document.getElementsByClassName(`parityValue column${i}`)[0]
@@ -50,7 +50,7 @@ const createValidParityGroups = (n) => {
 
         //rows
         let rowGroup = document.getElementsByClassName(`row${i}`);
-        rowGroup = Array.prototype.slice.call(rowGroup).map(x => parseInt(x.dataset.num));
+        rowGroup = Array.from(rowGroup).map(x => parseInt(x.dataset.num));
         let rowSum = rowGroup.reduce((x, y) => x + y);
         if (rowSum % 2 === 1) {
             let parityElement = document.getElementsByClassName(`parityValue row${i}`)[0]
@@ -59,7 +59,7 @@ const createValidParityGroups = (n) => {
     };
     //total box
     let boxes = document.getElementsByClassName("box");
-    boxes = Array.prototype.slice.call(boxes).map(x => parseInt(x.dataset.num));
+    boxes = Array.from(boxes).map(x => parseInt(x.dataset.num));
     let totalSum = boxes.reduce((x, y) => x + y);
     if (totalSum % 2 === 1) {
         let parityElement = document.getElementsByClassName(`boxParityValue`)[0]
@@ -152,10 +152,10 @@ const removeHighlightAll = () => {
 
 let parities = document.getElementsByClassName("parityValue");
 for (let i = 0; i < parities.length; i++) {
-    parities[i].addEventListener("mouseover", function () {highlightParityGroup(parities[i])})
-    parities[i].addEventListener("mouseout", function () {removeHighlight(parities[i])})
+    parities[i].addEventListener("mouseover", function () {highlightParityGroup(parities[i])});
+    parities[i].addEventListener("mouseout", function () {removeHighlight(parities[i])});
 };
-document.getElementsByClassName("boxParityValue")[0].addEventListener("mouseover", function () {highlightAll()});
-document.getElementsByClassName("boxParityValue")[0].addEventListener("mouseout", function () {removeHighlightAll()});
+document.getElementsByClassName("boxParityValue")[0].addEventListener("mouseover", highlightAll);
+document.getElementsByClassName("boxParityValue")[0].addEventListener("mouseout", removeHighlightAll);
 
 
