@@ -10,13 +10,145 @@
 5) XOR representation page with hardcoded 4x4
 */
 
+const descriptions = {
+    intro: {
+        mainTitle: "Efficient and Reliable Error Correction - An Overview of Hamming Codes",
+        mainDescription: "[insert description here]",
+        sidebarTitle: "A Brief Guide",
+        sidebarDescription: `<strong>Basic Hamming Codes:</strong><br>
+        This section contains a valid 4 × 4 Hamming code. Click a square to create an error and see how it affects each of the parity groups.<br><br>
+        <strong>Extending to n × n:</strong><br>
+        This section allows you to create larger Hamming codes and explore the algorithm's efficiency in scaling. Click the menu at the top to change the size of the grid.<br><br>
+        <strong>Applying Hamming Codes in Programming:</strong><br>
+        This section goes over the basics of translating the visual representation of a Hamming code to a binary, computer-friendly representation.<br><br>
+        <strong>The Magic of XOR:</strong><br>This section shows how using the XOR logic operator lets us identify errors in a Hamming code with low amounts of computation.`
+    },
+    bhc: {
+        title: "Visualizing",
+        description: "[insert description here]"
+    },
+    nxn: {
+        title: "Scaling",
+        description: "Despite their already low amount of redundancy bits, the efficiency of Hamming codes only gets better as the size of the grid increases.\n\nFor the 4 × 4 grids we have explored so far, 4 (or 5 if you count the first bit) redundancy bits are required to identify an error in any position on the grid. For an 8 × 8 grid with four times as many positions, one may expect to need four times as many redundancy bits. With Hamming codes, this is not the case - an 8 × 8 grid only requires 6 redundancy bits.\n\nIn general, an n × n grid can be perfectly tracked by only 2 × log2(n) redundancy bits. This means that the larger of a grid we use, the more efficient the Hamming code process becomes.\n\nDespite this, it is not always optimal to use the largest grid possible. Recall that Hamming codes have trouble detecting the positions of more than one error - a larger grid also increases the chance that there will be more than one error in the grid. Due to this, many choose to use multiple smaller grids to strike the right balance between efficiency and likeliness of multiple errors occurring."
+    },
+    introprog: {
+        title: "Translation",
+        description: "[insert description here]"
+    },
+    xor: {
+        title: "Exclusive OR",
+        description: "[insert description here]"
+    }
+};
 
+//Global boolean to turn flipping on/off
+let toggle = false;
 
+//Nav bar styling behaviour
+const navButtons = document.getElementsByClassName("navButton");
+for (let i = 0; i < navButtons.length; i++) {
+    navButtons[i].addEventListener("click", function () {
+        let currentSelected = document.getElementsByClassName("navSelected")[0];
+        currentSelected.classList.remove("navSelected");
+        navButtons[i].classList.add("navSelected");
+    });
+};
+
+//Page updating functions
+const main = document.getElementById("main");
+const sidebarTitle = document.getElementById("sidebarTitle");
+const sidebarDesc = document.getElementById("sidebarDescription");
+
+const loadIntro = () => {
+    main.innerHTML = "";
+    sidebarTitle.innerText = descriptions.intro.sidebarTitle;
+    sidebarDesc.innerHTML = descriptions.intro.sidebarDescription;
+    toggle = false;
+};
+
+const loadBHC = () => {
+    main.innerHTML = "";
+    let gridParent = document.createElement("div");
+    gridParent.id = "gridParent";
+    main.appendChild(gridParent);
+    generateBoxes(4);
+    sidebarTitle.innerText = descriptions.bhc.title;
+    sidebarDesc.innerText = descriptions.bhc.description;
+    toggle = true;
+};
+
+const loadNXN = () => {
+    const getNXNOptions = () => {
+        let options =  ["4 × 4", "8 × 8", "16 × 16"];
+        let result = [];
+        for (let i = 0; i < options.length; i++) {
+            let option = document.createElement("option");
+            option.value = options[i];
+            option.innerHTML = options[i];
+            result.push(option);
+        };
+        return result;
+    };
+    main.innerHTML = "";
+    let gridParent = document.createElement("div");
+    gridParent.id = "gridParent";
+    let selectParent = document.createElement("div");
+    selectParent.id = "selectParent";
+    let selectMenu = document.createElement("select");
+    selectMenu.id = "selectMenu";
+    let options = getNXNOptions();
+    for (let i = 0; i < options.length; i++) {
+        selectMenu.appendChild(options[i]);
+    };
+    selectMenu.addEventListener("change", function () {
+        let num = parseInt(selectMenu.value.split(" ")[0]);
+        gridParent.innerHTML = "";
+        generateBoxes(num);
+    });
+    selectMenu.style = `
+        width: 100px;
+        height: 50px;
+        -webkit-appearance: none;
+        text-align: center;
+        border-radius: 5px;
+        border: 3px solid #fff;
+        color: #fff;
+        font-size: 1.5em;
+        background-color: rgb(43, 45, 68);
+        font-family: "Trebuchet MS";
+        cursor: pointer;
+    `
+    selectParent.appendChild(selectMenu);
+    main.appendChild(selectParent);
+    main.appendChild(gridParent);
+    generateBoxes(4);
+    sidebarTitle.innerText = descriptions.nxn.title;
+    sidebarDesc.innerText = descriptions.nxn.description;
+    toggle = true;
+};
+
+const loadIntroProg = () => {
+    main.innerHTML = "";
+    sidebarTitle.innerText = descriptions.introprog.title;
+    sidebarDesc.innerText = descriptions.introprog.description;
+    toggle = false;
+};
+
+const loadXOR = () => {
+    main.innerHTML = "";
+    sidebarTitle.innerText = descriptions.xor.title;
+    sidebarDesc.innerText = descriptions.xor.description;
+    toggle = true;
+};
+
+//Toggle 0/1 when box is clicked;
 const toggleBox = (box) => {
-    let boxes = document.getElementsByClassName("box");
-    let current = parseInt(boxes[box].dataset.num);
-    boxes[box].style.backgroundImage = `url(assets/${current ^ 1}.PNG)`;
-    boxes[box].setAttribute("data-num", current ^ 1);
+    if (toggle === true) {
+        let boxes = document.getElementsByClassName("box");
+        let current = parseInt(boxes[box].dataset.num);
+        boxes[box].style.backgroundImage = `url(assets/${current ^ 1}.PNG)`;
+        boxes[box].setAttribute("data-num", current ^ 1);
+    };
 };
 
 
@@ -112,50 +244,49 @@ const generateBoxes = (n) => {
     parent.style.gap = `${8 / Math.log2(n)}px`;
 
     createValidParityGroups(Math.log2(n));
+    addHighlighting();
 };
-
-generateBoxes(4);
-
-
 
 
 //Highlighting parity groups when parity value is hovered
-const highlightParityGroup = (box) => {
-    let parityClass = box.classList[2];
-    let elementsToUpdate = document.getElementsByClassName(parityClass);
-    for (let i = 0; i < elementsToUpdate.length; i++) {
-        elementsToUpdate[i].classList.add("highlightedBox");
+const addHighlighting = () => {
+    const highlightParityGroup = (box) => {
+        let parityClass = box.classList[2];
+        let elementsToUpdate = document.getElementsByClassName(parityClass);
+        for (let i = 0; i < elementsToUpdate.length; i++) {
+            elementsToUpdate[i].classList.add("highlightedBox");
+        };
     };
-};
-
-const highlightAll = () => {
-    let boxes = document.getElementsByClassName("box");
-    for (let i = 0; i < boxes.length; i++) {
-        boxes[i].classList.add("highlightedBox");
+    
+    const highlightAll = () => {
+        let boxes = document.getElementsByClassName("box");
+        for (let i = 0; i < boxes.length; i++) {
+            boxes[i].classList.add("highlightedBox");
+        };
     };
-};
-
-const removeHighlight = (box) => {
-    let parityClass = box.classList[2];
-    let elementsToUpdate = document.getElementsByClassName(parityClass);
-    for (let i = 0; i < elementsToUpdate.length; i++) {
-        elementsToUpdate[i].classList.remove("highlightedBox");
+    
+    const removeHighlight = (box) => {
+        let parityClass = box.classList[2];
+        let elementsToUpdate = document.getElementsByClassName(parityClass);
+        for (let i = 0; i < elementsToUpdate.length; i++) {
+            elementsToUpdate[i].classList.remove("highlightedBox");
+        };
     };
-};
-
-const removeHighlightAll = () => {
-    let boxes = document.getElementsByClassName("box");
-    for (let i = 0; i < boxes.length; i++) {
-        boxes[i].classList.remove("highlightedBox");
+    
+    const removeHighlightAll = () => {
+        let boxes = document.getElementsByClassName("box");
+        for (let i = 0; i < boxes.length; i++) {
+            boxes[i].classList.remove("highlightedBox");
+        };
     };
+    
+    let parities = document.getElementsByClassName("parityValue");
+    for (let i = 0; i < parities.length; i++) {
+        parities[i].addEventListener("mouseover", function () {highlightParityGroup(parities[i])});
+        parities[i].addEventListener("mouseout", function () {removeHighlight(parities[i])});
+    };
+    document.getElementsByClassName("boxParityValue")[0].addEventListener("mouseover", highlightAll);
+    document.getElementsByClassName("boxParityValue")[0].addEventListener("mouseout", removeHighlightAll);
 };
 
-let parities = document.getElementsByClassName("parityValue");
-for (let i = 0; i < parities.length; i++) {
-    parities[i].addEventListener("mouseover", function () {highlightParityGroup(parities[i])});
-    parities[i].addEventListener("mouseout", function () {removeHighlight(parities[i])});
-};
-document.getElementsByClassName("boxParityValue")[0].addEventListener("mouseover", highlightAll);
-document.getElementsByClassName("boxParityValue")[0].addEventListener("mouseout", removeHighlightAll);
-
-
+loadIntro();

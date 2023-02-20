@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <head>
+    <title>Hamming Codes</title>
     <meta charset="utf-8" />
-    <script src="main.js" defer></script>
+    <script type="text/javascript" src="main.js" defer></script>
     <link rel="stylesheet" href="main.css" />
 </head>
 <body>
@@ -9,25 +10,23 @@
         Hamming Codes
     </div>
     <div id="navBar">
-        <div id="button1" class="navButton">
+        <div id="intro" class="navButton navSelected" onclick="loadIntro()">
             Introduction
         </div>
-        <div id="button2" class="navButton">
+        <div id="bhc" class="navButton" onclick="loadBHC()">
             Basic Hamming Codes
         </div>
-        <div id="button3" class="navButton">
+        <div id="nxn" class="navButton" onclick="loadNXN()">
             Extending to n × n
         </div>
-        <div id="button4" class="navButton">
+        <div id="introprog" class="navButton" onclick="loadIntroProg()">
             Applying Hamming Codes in Programming
         </div>
-        <div id="button5" class="navButton">
+        <div id="xor" class="navButton" onclick="loadXOR()">
             The Magic of XOR
         </div>
     </div>
     <div id="main">
-        <div id="gridParent">
-        </div>
     </div>
     <div id="sidebar">
         <div id="sidebarTitle">

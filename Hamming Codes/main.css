@@ -40,8 +40,9 @@ body {
     transition: 0.5s ease-out;
     background: linear-gradient(to left, #ffffff00 50%, rgb(111, 117, 180) 50%) right;
     background-size: 200%;
+    cursor: pointer;
 }
-.navButton:hover {
+.navButton:hover, .navSelected {
     background-position: left;
 }
 #sidebar {
@@ -50,20 +51,24 @@ body {
     flex-direction: column;
     color: #fff;
     border-left: 3px solid #fff;
+    overflow-y: auto;
 }
 #sidebarTitle {
     justify-content: center;
     padding-bottom: 10px;
-    font-size: 4em;
+    font-size: 3em;
+    width: 100%;
     height: auto;
 }
 #sidebarDescription {
     width: 100%
 }
 #main {
-    display: inline-grid;
+    display: flex;
     justify-content: center;
-    align-items: center;
+    align-items: center; 
+    flex-direction: column;
+    overflow-y: auto;
 }
 #gridParent {
     display: grid;
@@ -71,8 +76,8 @@ body {
     grid-template-rows: repeat(4, minmax(0, 1fr));
     user-select: none;
     gap: 4px;
-    width: 600px;
-    height: 600px;
+    height: 80%;
+    aspect-ratio: 1;
 }
 .box img {
     height: 60%;
@@ -86,6 +91,7 @@ body {
     box-shadow: inset 0 0 20px #666;
     justify-content: center;
     align-items: center;
+    cursor: pointer;
 }
 .boxParityValue {
     background-color: #c7e055;
@@ -98,3 +104,10 @@ body {
     background-color: #8fdee4c7;
     color: #fff;
 }
+#selectParent {
+    display: flex;
+    width: 100%;
+    height: 10%;
+    justify-content: center;
+    align-items: center;
+};
