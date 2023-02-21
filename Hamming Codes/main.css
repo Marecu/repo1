@@ -104,6 +104,9 @@ body {
     background-color: #8fdee4c7;
     color: #fff;
 }
+.wrongParity {
+    color: #ff0000;
+}
 #selectParent {
     display: flex;
     width: 100%;

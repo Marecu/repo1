@@ -60,13 +60,14 @@ const sidebarTitle = document.getElementById("sidebarTitle");
 const sidebarDesc = document.getElementById("sidebarDescription");
 
 const loadIntro = () => {
+    toggle = false;
     main.innerHTML = "";
     sidebarTitle.innerText = descriptions.intro.sidebarTitle;
     sidebarDesc.innerHTML = descriptions.intro.sidebarDescription;
-    toggle = false;
 };
 
 const loadBHC = () => {
+    toggle = true;
     main.innerHTML = "";
     let gridParent = document.createElement("div");
     gridParent.id = "gridParent";
@@ -74,7 +75,6 @@ const loadBHC = () => {
     generateBoxes(4);
     sidebarTitle.innerText = descriptions.bhc.title;
     sidebarDesc.innerText = descriptions.bhc.description;
-    toggle = true;
 };
 
 const loadNXN = () => {
@@ -89,6 +89,7 @@ const loadNXN = () => {
         };
         return result;
     };
+    toggle = true;
     main.innerHTML = "";
     let gridParent = document.createElement("div");
     gridParent.id = "gridParent";
@@ -124,30 +125,30 @@ const loadNXN = () => {
     generateBoxes(4);
     sidebarTitle.innerText = descriptions.nxn.title;
     sidebarDesc.innerText = descriptions.nxn.description;
-    toggle = true;
 };
 
 const loadIntroProg = () => {
+    toggle = false;
     main.innerHTML = "";
     sidebarTitle.innerText = descriptions.introprog.title;
     sidebarDesc.innerText = descriptions.introprog.description;
-    toggle = false;
 };
 
 const loadXOR = () => {
+    toggle = true;
     main.innerHTML = "";
     sidebarTitle.innerText = descriptions.xor.title;
     sidebarDesc.innerText = descriptions.xor.description;
-    toggle = true;
 };
 
 //Toggle 0/1 when box is clicked;
 const toggleBox = (box) => {
-    if (toggle === true) {
+    if (toggle) {
         let boxes = document.getElementsByClassName("box");
         let current = parseInt(boxes[box].dataset.num);
         boxes[box].style.backgroundImage = `url(assets/${current ^ 1}.PNG)`;
         boxes[box].setAttribute("data-num", current ^ 1);
+        checkParityDisruption();
     };
 };
 
@@ -176,8 +177,9 @@ const createValidParityGroups = (n) => {
         columnGroup = Array.from(columnGroup).map(x => parseInt(x.dataset.num));
         let columnSum = columnGroup.reduce((x, y) => x + y);
         if (columnSum % 2 === 1) {
-            let parityElement = document.getElementsByClassName(`parityValue column${i}`)[0]
-            parityElement.onclick.apply();
+            let parityElement = document.getElementsByClassName(`parityValue column${i}`)[0];
+            let boxNum = parseInt(parityElement.onclick.toString().split("(")[2].split(")")[0]);
+            toggleBox(boxNum);
         };
 
         //rows
@@ -185,8 +187,9 @@ const createValidParityGroups = (n) => {
         rowGroup = Array.from(rowGroup).map(x => parseInt(x.dataset.num));
         let rowSum = rowGroup.reduce((x, y) => x + y);
         if (rowSum % 2 === 1) {
-            let parityElement = document.getElementsByClassName(`parityValue row${i}`)[0]
-            parityElement.onclick.apply();
+            let parityElement = document.getElementsByClassName(`parityValue row${i}`)[0];
+            let boxNum = parseInt(parityElement.onclick.toString().split("(")[2].split(")")[0]);
+            toggleBox(boxNum);
         };
     };
     //total box
@@ -194,8 +197,7 @@ const createValidParityGroups = (n) => {
     boxes = Array.from(boxes).map(x => parseInt(x.dataset.num));
     let totalSum = boxes.reduce((x, y) => x + y);
     if (totalSum % 2 === 1) {
-        let parityElement = document.getElementsByClassName(`boxParityValue`)[0]
-        parityElement.onclick.apply();
+        toggleBox(0);
     };
 };
 
@@ -287,6 +289,40 @@ const addHighlighting = () => {
     };
     document.getElementsByClassName("boxParityValue")[0].addEventListener("mouseover", highlightAll);
     document.getElementsByClassName("boxParityValue")[0].addEventListener("mouseout", removeHighlightAll);
+};
+
+//Make number red if a parity group has an odd sum
+const checkParityDisruption = () => {
+    //Test small parity groups
+    let parityValues = document.getElementsByClassName("parityValue");
+    for (let i = 0; i < parityValues.length; i++) {
+        let parityClass = parityValues[i].classList[2];
+        let groupElements = document.getElementsByClassName(parityClass);
+        let current = parseInt(parityValues[i].dataset.num);
+        let sum = 0;
+        for (let j = 0; j < groupElements.length; j++) {
+            if (parseInt(groupElements[j].dataset.num) === 1) {
+                sum++;
+            };
+        };
+        if (sum % 2 === 1) {
+            parityValues[i].style.backgroundImage = `url(assets/wrong${current}.PNG)`;
+        } else {
+            parityValues[i].style.backgroundImage = `url(assets/${current}.PNG)`;
+        };
+    };
+    
+    //Test overall box
+    let boxes = document.getElementsByClassName("box");
+    boxes = Array.from(boxes).map(x => parseInt(x.dataset.num));
+    let boxParity = document.getElementsByClassName("boxParityValue")[0];
+    let totalSum = boxes.reduce((x, y) => x + y);
+    let current = parseInt(boxParity.dataset.num);
+    if (totalSum % 2 === 1) {
+        boxParity.style.backgroundImage = `url(assets/wrong${current}.PNG)`;
+    } else {
+        boxParity.style.backgroundImage = `url(assets/${current}.PNG)`;
+    };
 };
 
 loadIntro();
