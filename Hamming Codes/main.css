@@ -11,6 +11,7 @@ body {
     height: 100vh;
     font-family: "Trebuchet MS";
     background-color: rgb(19, 20, 31);
+    margin: 0;
 }
 #titleBar {
     text-align: center;
@@ -92,6 +93,7 @@ body {
     justify-content: center;
     align-items: center;
     cursor: pointer;
+    transition: 0.2s;
 }
 .boxParityValue {
     background-color: #c7e055;
