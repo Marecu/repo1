@@ -33,7 +33,7 @@ const descriptions = {
     },
     introprog: {
         title: "Translation",
-        description: "[insert description here]"
+        description: "While Hamming Codes are easy to understand visually, they are a bit impractical to work out by hand. Thankfully, there is a very elegant way to represent everything we have explored so far.\n\nThe trick is simple - we just have to label every bit in order, and critically, in binary. For example, the upper leftmost bit in a 4 × 4 grid would be 0000, the one to the right would be 0001, the one to the right of that would be 0010, and so on until we reach the last bit labeled 1111.\n\nThis may seem arbitrary, but it actually tells us a lot of information. Notably, each parity bit's label will consist of all zeros and a singular 1. The position of the 1 represents the parity group the parity bit corresponds to, meaning any other bit with a position label containing a 1 in that position belongs to that parity group.\n\nUsing this, we can accurately identify which parity groups any given position on the grid belongs to just by analyzing the bits of its position.\n\nClick on a bit to see its binary position in the grid."
     },
     xor: {
         title: "Exclusive OR",
@@ -41,8 +41,11 @@ const descriptions = {
     }
 };
 
-//Global boolean to turn flipping on/off
+//Global boolean to turn 0/1 flipping on/off
 let toggle = false;
+
+//Global boolean to turn number/binary flipping on/off
+let binary = false;
 
 //Nav bar styling behaviour
 const navButtons = document.getElementsByClassName("navButton");
@@ -60,14 +63,17 @@ const sidebarTitle = document.getElementById("sidebarTitle");
 const sidebarDesc = document.getElementById("sidebarDescription");
 
 const loadIntro = () => {
-    toggle = false;
+    toggle = true;
+    binary = false;
     main.innerHTML = "";
     sidebarTitle.innerText = descriptions.intro.sidebarTitle;
     sidebarDesc.innerHTML = descriptions.intro.sidebarDescription;
+    toggle = false;
 };
 
 const loadBHC = () => {
     toggle = true;
+    binary = false;
     main.innerHTML = "";
     let gridParent = document.createElement("div");
     gridParent.id = "gridParent";
@@ -90,6 +96,7 @@ const loadNXN = () => {
         return result;
     };
     toggle = true;
+    binary = false;
     main.innerHTML = "";
     let gridParent = document.createElement("div");
     gridParent.id = "gridParent";
@@ -128,46 +135,52 @@ const loadNXN = () => {
 };
 
 const loadIntroProg = () => {
-    toggle = false;
+    toggle = true;
     main.innerHTML = "";
     sidebarTitle.innerText = descriptions.introprog.title;
     sidebarDesc.innerText = descriptions.introprog.description;
+    let gridParent = document.createElement("div");
+    gridParent.id = "gridParent";
+    main.appendChild(gridParent);
+    generateBoxes(4);
+    addPositionHovering();
+    toggle = false;
+    binary = true;
 };
 
 const loadXOR = () => {
     toggle = true;
+    binary = false;
     main.innerHTML = "";
     sidebarTitle.innerText = descriptions.xor.title;
     sidebarDesc.innerText = descriptions.xor.description;
 };
 
-//Toggle 0/1 when box is clicked;
+//Toggle 0/1 or number/binary position when box is clicked;
 const toggleBox = (box) => {
+    let boxes = document.getElementsByClassName("box");
+    let current = parseInt(boxes[box].dataset.num);
+    //Toggle 0/1
     if (toggle) {
-        let boxes = document.getElementsByClassName("box");
-        let current = parseInt(boxes[box].dataset.num);
         boxes[box].style.backgroundImage = `url(assets/${current ^ 1}.PNG)`;
         boxes[box].setAttribute("data-num", current ^ 1);
         checkParityDisruption();
     };
+    //Toggle number/binary position
+    if (binary) {
+        if (boxes[box].style.backgroundImage === "none") {
+            boxes[box].style.backgroundImage = `url(assets/${current}.PNG)`;
+            for (subBox of boxes[box].children) {
+                subBox.classList.add("invisible");
+            };
+        } else {
+            boxes[box].style.backgroundImage = "none";
+            for (subBox of boxes[box].children) {
+                subBox.classList.remove("invisible");
+            };
+        };
+    };
 };
-
-
-/*
-For an n x n Hamming square,
-
-2log2(n) parity squares
-
-log2(n) squares for columns/rows
-
-COLUMN GENERAL FORMULA:
-    for i (starting at 1) columns:
-    Math.floor(i / (n / 2^i)) % 2 === 0 
-
-ROW GENERAL FORMULA:
-    for i (starting at 1) rows:
-    Math.floor(i / (n * 2^(i - 1))) % 2 === 1
-*/
 
 //Make the grid into a valid Hamming square
 const createValidParityGroups = (n) => {
@@ -200,6 +213,22 @@ const createValidParityGroups = (n) => {
         toggleBox(0);
     };
 };
+
+/*
+For an n x n Hamming square,
+
+2log2(n) parity squares
+
+log2(n) squares for columns/rows
+
+COLUMN GENERAL FORMULA:
+    for i (starting at 1) columns:
+    Math.floor(i / (n / 2^i)) % 2 === 0 
+
+ROW GENERAL FORMULA:
+    for i (starting at 1) rows:
+    Math.floor(i / (n * 2^(i - 1))) % 2 === 1
+*/
 
 //Generate n x n Hamming square (n must be power of 2)
 const generateBoxes = (n) => {
@@ -235,8 +264,6 @@ const generateBoxes = (n) => {
         div.setAttribute("data-num", boxNum);
         //styling stuff
         div.style.backgroundImage = `url(assets/${boxNum}.PNG)`;
-        div.style.backgroundRepeat = "no-repeat";
-        div.style.backgroundSize = "contain";
         div.style.boxShadow = `inset 0 0 ${80 / n}px #666`
         result.push(div);
     };
@@ -322,6 +349,31 @@ const checkParityDisruption = () => {
         boxParity.style.backgroundImage = `url(assets/wrong${current}.PNG)`;
     } else {
         boxParity.style.backgroundImage = `url(assets/${current}.PNG)`;
+    };
+};
+
+//Converts an integer to a string containing the binary representation up to the number of bits specified
+const convertToBinary = (n, numOfBits) => {
+    let num = n.toString(2);
+    while (num.length < numOfBits) {
+        num = "0" + num;
+    };
+    return num;
+};
+
+//Adds functionality to show the binary position of a given tile when hovered - only works for 4 x 4
+const addPositionHovering = () => {
+    let boxes = document.getElementsByClassName("box");
+    for (let i = 0; i < boxes.length; i++) {
+        boxes[i].classList.add("positionFormatting");
+        let binaryRepresentation = convertToBinary(i, 4).split("");
+        //create boxes to show the binary position
+        for (let j = 0; j < 4; j++) {
+            let innerBox = document.createElement("div");
+            innerBox.classList.add("positionNumber", "invisible");
+            innerBox.style.backgroundImage = `url(assets/${binaryRepresentation[j]}.PNG)`;
+            boxes[i].appendChild(innerBox);
+        };
     };
 };
 
