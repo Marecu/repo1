@@ -37,7 +37,7 @@ const descriptions = {
     },
     xor: {
         title: "Exclusive OR",
-        description: "[insert description here]"
+        description: "The exclusive OR (XOR) operator compares the bits in two numbers position by position, producing a 1 in the result if exactly one of the numbers in that position is a 1. As an example, 1011 XOR 0110 would produce 1101.\n\nAs it turns out, if we take the positions of all the 1s in a valid Hamming Code and combine them with the XOR operator, it always returns 0. This is an interesting and very useful feature - we can leverage this to figure out both whether or not there is an error and also where the error is in the grid.\n\nTo identify the position of an error, all we have to do is look at the value produced by the XOR operation. If it's 0, there's nothing wrong. If it's anything other than 0, the number that it is corresponds to the position of the bit that contains the error.\n\nThis trick makes correcting Hamming Codes so much easier for computers. We don't have to worry about parity groups, counting 1s, or anything else. It all gets streamlined into one simple process - XOR the positions of the 1s and check if it's 0.\n\nFlip a bit and see how it all works."
     }
 };
 
@@ -78,7 +78,7 @@ const loadBHC = () => {
     let gridParent = document.createElement("div");
     gridParent.id = "gridParent";
     main.appendChild(gridParent);
-    generateBoxes(4);
+    generateBoxes(4, "gridParent");
     sidebarTitle.innerText = descriptions.bhc.title;
     sidebarDesc.innerText = descriptions.bhc.description;
 };
@@ -111,39 +111,37 @@ const loadNXN = () => {
     selectMenu.addEventListener("change", function () {
         let num = parseInt(selectMenu.value.split(" ")[0]);
         gridParent.innerHTML = "";
-        generateBoxes(num);
+        generateBoxes(num, "gridParent");
     });
-    selectMenu.style = `
-        width: 100px;
-        height: 50px;
-        -webkit-appearance: none;
-        text-align: center;
-        border-radius: 5px;
-        border: 3px solid #fff;
-        color: #fff;
-        font-size: 1.5em;
-        background-color: rgb(43, 45, 68);
-        font-family: "Trebuchet MS";
-        cursor: pointer;
-    `
     selectParent.appendChild(selectMenu);
     main.appendChild(selectParent);
     main.appendChild(gridParent);
-    generateBoxes(4);
+    generateBoxes(4, "gridParent");
     sidebarTitle.innerText = descriptions.nxn.title;
     sidebarDesc.innerText = descriptions.nxn.description;
 };
 
 const loadIntroProg = () => {
+    binary = false;
     toggle = true;
     main.innerHTML = "";
     sidebarTitle.innerText = descriptions.introprog.title;
     sidebarDesc.innerText = descriptions.introprog.description;
     let gridParent = document.createElement("div");
     gridParent.id = "gridParent";
+    let flipAll = document.createElement("div");
+    flipAll.id = "flipAll";
+    flipAll.onclick = function () {
+        let boxes = document.getElementsByClassName("box");
+        for (let i = 0; i < boxes.length; i++) {
+            toggleBox(i);
+        };
+    };
+    flipAll.innerHTML = "Flip All";
+    main.appendChild(flipAll);
     main.appendChild(gridParent);
-    generateBoxes(4);
-    addPositionHovering();
+    generateBoxes(4, "gridParent");
+    addPositions();
     toggle = false;
     binary = true;
 };
@@ -152,6 +150,21 @@ const loadXOR = () => {
     toggle = true;
     binary = false;
     main.innerHTML = "";
+    let xorParent = document.createElement("div");
+    xorParent.classList.add("xorParent");
+    let xorGrid = document.createElement("div");
+    xorGrid.id = "xorGrid";
+    let gridParent = document.createElement("div");
+    gridParent.id = "gridParent";
+    xorGrid.appendChild(gridParent);
+    let xorList = document.createElement("div");
+    xorList.id = "xorList";
+    xorParent.appendChild(xorGrid);
+    xorParent.appendChild(xorList);
+    main.appendChild(xorParent);
+    generateBoxes(4, "gridParent");
+    makeXORList();
+    addXORListeners();
     sidebarTitle.innerText = descriptions.xor.title;
     sidebarDesc.innerText = descriptions.xor.description;
 };
@@ -231,9 +244,9 @@ ROW GENERAL FORMULA:
 */
 
 //Generate n x n Hamming square (n must be power of 2)
-const generateBoxes = (n) => {
+const generateBoxes = (n, p) => {
     let result = [];
-    let parent = document.getElementById("gridParent");
+    let parent = document.getElementById(p);
     //get parity classes
     for (let i = 0; i < Math.pow(n, 2); i++) {
         let classes = "box "
@@ -361,11 +374,10 @@ const convertToBinary = (n, numOfBits) => {
     return num;
 };
 
-//Adds functionality to show the binary position of a given tile when hovered - only works for 4 x 4
-const addPositionHovering = () => {
+//Adds functionality to show the binary position of a given tile when clicked - only works for 4 x 4
+const addPositions = () => {
     let boxes = document.getElementsByClassName("box");
     for (let i = 0; i < boxes.length; i++) {
-        boxes[i].classList.add("positionFormatting");
         let binaryRepresentation = convertToBinary(i, 4).split("");
         //create boxes to show the binary position
         for (let j = 0; j < 4; j++) {
@@ -374,6 +386,56 @@ const addPositionHovering = () => {
             innerBox.style.backgroundImage = `url(assets/${binaryRepresentation[j]}.PNG)`;
             boxes[i].appendChild(innerBox);
         };
+    };
+};
+
+//Create a list of the positions in the grid that contain a 1
+const makeXORList = () => {
+    let boxes = document.getElementsByClassName("box");
+    let list = document.getElementById("xorList");
+    list.innerHTML = "";
+    let valueContainer = document.createElement("div");
+    valueContainer.classList.add("xorValueContainer");
+    list.appendChild(valueContainer);
+    //grab all boxes containing 1, append position to list
+    for (let i = 0; i < boxes.length; i++) {
+        if (parseInt(boxes[i].dataset.num) === 1) {
+            let binaryRepresentation = convertToBinary(i, 4).split("");
+            let xorBox = document.createElement("div");
+            xorBox.classList.add("xorBox");
+            for (let j = 0; j < 4; j++) {
+                let innerBox = document.createElement("div");
+                innerBox.classList.add("xorNumber");
+                innerBox.style.backgroundImage = `url(assets/inverted${binaryRepresentation[j]}.PNG)`;
+                xorBox.appendChild(innerBox);
+            };
+            valueContainer.appendChild(xorBox);
+            xorBox.dataset.num = i;
+        };
+    };
+    //calculate result and append to bottom
+    let xorValues = document.getElementsByClassName("xorBox");
+    let total = 0;
+    for (let i = 0; i < xorValues.length; i++) {
+        total = total ^ parseInt(xorValues[i].dataset.num);
+    };
+    let resultBinary = convertToBinary(total, 4).split("");
+    let xorResult = document.createElement("div");
+    xorResult.classList.add("xorResult");
+    for (let j = 0; j < 4; j++) {
+        let innerBox = document.createElement("div");
+        innerBox.classList.add("xorNumber");
+        innerBox.style.backgroundImage = `url(assets/inverted${resultBinary[j]}.PNG)`;
+        xorResult.appendChild(innerBox);
+    };
+    list.appendChild(xorResult);
+};
+
+//Update XOR list whenever a box gets clicked
+const addXORListeners = () => {
+    let boxes = document.getElementsByClassName("box");
+    for (let i = 0; i < boxes.length; i++) {
+        boxes[i].addEventListener("click", makeXORList);
     };
 };
 
