@@ -29,7 +29,7 @@ const descriptions = {
     },
     nxn: {
         title: "Scaling",
-        description: "Despite their already low amount of redundancy bits, the efficiency of Hamming codes only gets better as the size of the grid increases.\n\nFor the 4 × 4 grids we have explored so far, 4 (or 5 if you count the first bit) redundancy bits are required to identify an error in any position on the grid. For an 8 × 8 grid with four times as many positions, one may expect to need four times as many redundancy bits. With Hamming codes, this is not the case - an 8 × 8 grid only requires 6 redundancy bits.\n\nIn general, an n × n grid can be perfectly tracked by only 2 × log2(n) redundancy bits. This means that the larger of a grid we use, the more efficient the Hamming code process becomes.\n\nDespite this, it is not always optimal to use the largest grid possible. Recall that Hamming codes have trouble detecting the positions of more than one error - a larger grid also increases the chance that there will be more than one error in the grid. Due to this, many choose to use multiple smaller grids to strike the right balance between efficiency and likeliness of multiple errors occurring."
+        description: "Despite their already low amount of redundancy bits, the efficiency of Hamming Codes only gets better as the size of the grid increases.\n\nFor the 4 × 4 grids we have explored so far, 4 (or 5 if you count the first bit) redundancy bits are required to identify an error in any position on the grid. For an 8 × 8 grid with four times as many positions, one may expect to need four times as many redundancy bits. With Hamming Codes, this is not the case - an 8 × 8 grid only requires 6 redundancy bits.\n\nIn general, an n × n grid can be perfectly tracked by only 2 × log2(n) redundancy bits. This means that the larger of a grid we use, the more efficient the Hamming Code process becomes.\n\nDespite this, it is not always optimal to use the largest grid possible. Recall that Hamming Codes have trouble detecting the positions of more than one error - a larger grid also increases the chance that there will be more than one error in the grid. Due to this, many choose to use multiple smaller grids to strike the right balance between efficiency and likeliness of multiple errors occurring."
     },
     introprog: {
         title: "Translation",
@@ -406,7 +406,7 @@ const makeXORList = () => {
             for (let j = 0; j < 4; j++) {
                 let innerBox = document.createElement("div");
                 innerBox.classList.add("xorNumber");
-                innerBox.style.backgroundImage = `url(assets/inverted${binaryRepresentation[j]}.PNG)`;
+                innerBox.style.backgroundImage = `url(assets/inverted${binaryRepresentation[j]}.png)`;
                 xorBox.appendChild(innerBox);
             };
             valueContainer.appendChild(xorBox);
@@ -425,7 +425,7 @@ const makeXORList = () => {
     for (let j = 0; j < 4; j++) {
         let innerBox = document.createElement("div");
         innerBox.classList.add("xorNumber");
-        innerBox.style.backgroundImage = `url(assets/inverted${resultBinary[j]}.PNG)`;
+        innerBox.style.backgroundImage = `url(assets/inverted${resultBinary[j]}.png)`;
         xorResult.appendChild(innerBox);
     };
     list.appendChild(xorResult);

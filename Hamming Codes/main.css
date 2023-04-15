@@ -57,12 +57,12 @@ body {
 #sidebarTitle {
     justify-content: center;
     padding-bottom: 10px;
-    font-size: 3em;
+    font-size: 2.5vw;
     width: 100%;
     height: auto;
 }
 #sidebarDescription {
-    width: 100%
+    width: 100%;
 }
 #main {
     display: flex;
@@ -103,14 +103,14 @@ body {
     flex-direction: column;
 }
 .xorValueContainer {
+    padding-right: 10px;
+    padding-left: 10px;
     display: flex;
-    justify-content: flex-end;
-    align-items: center;
     flex-direction: column;
     width: 40%;
     height: auto;
     max-height: 80%;
-    overflow-y: auto;
+    overflow-y: overlay;
 }
 .xorBox {
     width: 100%;
@@ -126,6 +126,8 @@ body {
     background-size: contain;
 }
 .xorResult {
+    padding-right: 10px;
+    padding-left: 10px;
     width: 40%;
     aspect-ratio: 4 / 1;
     display: flex;
@@ -215,4 +217,17 @@ body {
 #flipAll:hover {
     background-color: rgb(111, 117, 180);
     transition: 0.2s;
+}
+::-webkit-scrollbar {
+    width: 10px;
+}
+::-webkit-scrollbar-track {
+    background: rgb(43, 45, 68);
+}
+::-webkit-scrollbar-thumb {
+    background: #fff;
+    border-radius: 5px;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: rgb(111, 117, 180);
 }
