@@ -13,15 +13,21 @@
 const descriptions = {
     intro: {
         mainTitle: "Efficient and Reliable Error Correction - An Overview of Hamming Codes",
-        mainDescription: "[insert description here]",
+        basicIntro: "[insert description here]",
+        howTheyWork: "[insert description here]",
+        drawbacks: "[insert description here]",
+        zeroBit: "[insert description here]",
         sidebarTitle: "A Brief Guide",
         sidebarDescription: `<strong>Basic Hamming Codes:</strong><br>
         This section contains a valid 4 × 4 Hamming code. Click a square to create an error and see how it affects each of the parity groups.<br><br>
         <strong>Extending to n × n:</strong><br>
         This section allows you to create larger Hamming codes and explore the algorithm's efficiency in scaling. Click the menu at the top to change the size of the grid.<br><br>
         <strong>Applying Hamming Codes in Programming:</strong><br>
-        This section goes over the basics of translating the visual representation of a Hamming code to a binary, computer-friendly representation.<br><br>
-        <strong>The Magic of XOR:</strong><br>This section shows how using the XOR logic operator lets us identify errors in a Hamming code with low amounts of computation.`
+        This section goes over the basics of translating the visual representation of a Hamming Code to a binary, computer-friendly representation.<br><br>
+        <strong>The Magic of XOR:</strong><br>This section shows how using the XOR logic operator lets us identify errors in a Hamming Code with low amounts of computation.<br><br>
+        This project was heavily inspired by a great series of videos by <strong>3Blue1Brown</strong> on the topic. Check them out here:<br>
+        <div class="videoButton"><a href="https://www.youtube.com/watch?v=X8jsijhllIA">Part 1</a></div>
+        <div class="videoButton"><a href="https://www.youtube.com/watch?v=b3NxrZOu_CE">Part 2</a></div>`
     },
     bhc: {
         title: "Visualizing",
@@ -37,7 +43,7 @@ const descriptions = {
     },
     xor: {
         title: "Exclusive OR",
-        description: "The exclusive OR (XOR) operator compares the bits in two numbers position by position, producing a 1 in the result if exactly one of the numbers in that position is a 1. As an example, 1011 XOR 0110 would produce 1101.\n\nAs it turns out, if we take the positions of all the 1s in a valid Hamming Code and combine them with the XOR operator, it always returns 0. This is an interesting and very useful feature - we can leverage this to figure out both whether or not there is an error and also where the error is in the grid.\n\nTo identify the position of an error, all we have to do is look at the value produced by the XOR operation. If it's 0, there's nothing wrong. If it's anything other than 0, the number that it is corresponds to the position of the bit that contains the error.\n\nThis trick makes correcting Hamming Codes so much easier for computers. We don't have to worry about parity groups, counting 1s, or anything else. It all gets streamlined into one simple process - XOR the positions of the 1s and check if it's 0.\n\nFlip a bit and see how it all works."
+        description: "The exclusive OR (XOR) operator compares the bits in two numbers position by position, producing a 1 in the result if exactly one of the numbers in that position is a 1. As an example, 1011 XOR 0110 would produce 1101.\n\nComparing more than two numbers with XOR can be thought of as checking for an odd number of 1s in each bit position. So, 1010 XOR 1001 XOR 0111 would produce 0100 since there are two 1s in the first, second, and fourth positions and one 1 in the second position.\n\nAs it turns out, if we take the positions of all the 1s in a valid Hamming Code and combine them with the XOR operator, it always returns 0. This is an interesting and very useful feature - we can leverage this to figure out both whether or not there is an error and also where the error is in the grid.\n\nTo identify the position of an error, all we have to do is look at the value produced by the XOR operation. If it's 0, there's nothing wrong. If it's anything other than 0, the number that it returns is the position of the bit that contains the error.\n\nThis trick makes correcting Hamming Codes so much easier for computers. We don't have to worry about parity groups, counting 1s, or anything else. It all gets streamlined into one simple process - XOR the positions of the 1s and check if it's 0.\n\nFlip a bit and see how it all works."
     }
 };
 
@@ -63,11 +69,38 @@ const sidebarTitle = document.getElementById("sidebarTitle");
 const sidebarDesc = document.getElementById("sidebarDescription");
 
 const loadIntro = () => {
+    const makeSection = (title, content) => {
+        let sectionDiv = document.createElement("div");
+        sectionDiv.classList.add("sectionDiv");
+        let sectionTitle = document.createElement("div");
+        sectionTitle.classList.add("sectionTitle");
+        sectionTitle.innerHTML = title;
+        let sectionContent = document.createElement("div");
+        sectionContent.classList.add("sectionContent");
+        sectionContent.innerHTML = content;
+        sectionDiv.appendChild(sectionTitle);
+        sectionDiv.appendChild(sectionContent);
+        return sectionDiv;
+    };
+    const populateMainArea = () => {
+        let introWrapper = document.createElement("div");
+        introWrapper.classList.add("introWrapper");
+        let sectionTitle = document.createElement("div");
+        sectionTitle.classList.add("introTitle");
+        sectionTitle.innerHTML = descriptions.intro.mainTitle;
+        introWrapper.appendChild(sectionTitle);
+        introWrapper.appendChild(makeSection("1 - Data storage", descriptions.intro.basicIntro));
+        introWrapper.appendChild(makeSection("2 - Introducing: Hamming Codes", descriptions.intro.howTheyWork));
+        introWrapper.appendChild(makeSection("3 - Drawbacks", descriptions.intro.drawbacks));
+        introWrapper.appendChild(makeSection("4 - The Zero Bit", descriptions.intro.zeroBit));
+        main.appendChild(introWrapper);
+    };
     toggle = true;
     binary = false;
     main.innerHTML = "";
     sidebarTitle.innerText = descriptions.intro.sidebarTitle;
     sidebarDesc.innerHTML = descriptions.intro.sidebarDescription;
+    populateMainArea();
     toggle = false;
 };
 

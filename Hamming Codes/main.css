@@ -55,14 +55,34 @@ body {
     overflow-y: auto;
 }
 #sidebarTitle {
-    justify-content: center;
+    text-align: center;
     padding-bottom: 10px;
     font-size: 2.5vw;
-    width: 100%;
     height: auto;
+    background: rgb(43, 45, 68);
+    border-radius: 10px;
+    padding: 5px;
+    margin-bottom: 10px;
 }
 #sidebarDescription {
     width: 100%;
+}
+.videoButton {
+    width: calc(100% - 10px);
+    background: rgb(43, 45, 68);
+    border-radius: 10px;
+    padding: 5px;
+    margin-top: 10px;
+    text-align: center;
+    font-size: 1.5vw;
+}
+.videoButton:hover {
+    background: rgb(111, 117, 180);
+    transition: 0.2s;
+}
+a {
+    color: #f1f1f1;
+    text-decoration: none;
 }
 #main {
     display: flex;
@@ -70,6 +90,35 @@ body {
     align-items: center; 
     flex-direction: column;
     overflow-y: auto;
+}
+.introWrapper {
+    height: 100%;
+    width: 100%;
+    overflow-y: auto;
+}
+.introTitle {
+    background: rgb(111, 117, 180);
+    border-radius: 10px;
+    font-size: 3.5vw;
+    text-align: center;
+    color: #fff;
+    width: auto;
+    margin: 20px;
+}
+.sectionDiv {
+    margin: 20px;
+}
+.sectionTitle {
+    background:rgb(43, 45, 68);
+    border-radius: 10px;
+    font-weight: bold;
+    text-align: center;
+    font-size: 2vw;
+    color: #fff;
+    padding: 5px;
+}
+.sectionContent {
+    color: #fff;
 }
 #gridParent {
     display: grid;
@@ -103,14 +152,15 @@ body {
     flex-direction: column;
 }
 .xorValueContainer {
-    padding-right: 10px;
-    padding-left: 10px;
+    padding: 10px;
     display: flex;
     flex-direction: column;
     width: 40%;
     height: auto;
     max-height: 80%;
     overflow-y: overlay;
+    background: rgb(43, 45, 68);
+    border-radius: 10px 10px 0px 0px;
 }
 .xorBox {
     width: 100%;
@@ -126,13 +176,14 @@ body {
     background-size: contain;
 }
 .xorResult {
-    padding-right: 10px;
-    padding-left: 10px;
+    padding: 10px;
     width: 40%;
     aspect-ratio: 4 / 1;
     display: flex;
     justify-content: center;
     border-top: 3px solid #fff;
+    background: rgb(111, 117, 180);
+    border-radius: 0px 0px 10px 10px;
 }
 .box img {
     height: 60%;
@@ -174,6 +225,7 @@ body {
     width: 100px;
     height: 50px;
     -webkit-appearance: none;
+    appearance: none;
     text-align: center;
     border-radius: 5px;
     border: 3px solid #fff;
@@ -185,7 +237,7 @@ body {
     margin-bottom: 10px;
 }
 #selectMenu:hover {
-    background-color: rgb(111, 117, 180);
+    box-shadow: 0 0 10px 100px rgb(111, 117, 180) inset;
     transition: 0.2s;
 }
 .positionNumber {
