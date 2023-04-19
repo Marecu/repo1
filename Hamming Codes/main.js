@@ -13,10 +13,24 @@
 const descriptions = {
     intro: {
         mainTitle: "Efficient and Reliable Error Correction - An Overview of Hamming Codes",
-        basicIntro: "[insert description here]",
-        howTheyWork: "[insert description here]",
-        drawbacks: "[insert description here]",
-        zeroBit: "[insert description here]",
+        basicIntro: `Every single piece of data, whether it is a program, an image, a video, or even a song inscribed on a CD, is ultimately just an extremely long string of 1s and 0s. With the use of technology, we are able to interpret these strings into whatever end result we are looking for. Often, data gets damaged somewhere along the way during the time when it is travelling between the sender and receiver. This creates issues - if the data we receive isn't correct, we'll end up with errors in the final result. In an image, this could mean miscoloured pixels, or on a CD, this could result in distorted audio.<br><br>
+        Clearly, there is a reason to include some form of redundancy to ensure the correct data gets transmitted from the sender to the receiver. This could be done in a number of ways. The most intuitive way would be to store additional copies of the same data and cross-reference them with each other. If one bit gets flipped, you'll be able to tell it's wrong by looking at the other copies of the data. This works, but it requires an extremely large portion of your data to be used on redundancy only. Even with only two additional copies, 66% of your data would be redundant. Ultimately, the goal is to look for a solution that uses the minimum amount of data on redundancy while still being able to ensure that every meaningful bit is correct.`,
+        howTheyWork: `While working at Bell Labs in the 1940s, Richard Hamming was trying to find an efficient solution to this exact problem. In doing so, he thought of applying a very useful mathematical principle - <strong>parity</strong>. Parity (in mathematics) means the state of being either even or odd. Then, if we add up all the bits in a piece of data, we can check its parity. For example, if there are seven 1s, it would have an odd parity. If you add another 1 into the data somewhere, it would then have an even parity. This is an important principle: <strong>changing a bit anywhere changes the parity of the group</strong>.<br><br>
+        This was a good start - if you use one bit for redundancy to make the parity always even, you can detect if an error occurred. If a bit was flipped, you could tell just by looking at the parity of the group. Hamming built on this further, aiming to find a way to isolate an error's location. To do this, he implemented a clever trick: he arranged the data into a grid and used parity checks on different parts of the data to narrow down where the error could be. For a 4 × 4 grid, the groups would be arranged like so:
+        <div class="introImageContainer">
+            <div class="introImage" style="background-image: url(assets/parity1.png);"></div>
+            <div class="introImage" style="background-image: url(assets/parity2.png);"></div>
+            <div class="introImage" style="background-image: url(assets/parity3.png);"></div>
+            <div class="introImage" style="background-image: url(assets/parity4.png);"></div>
+        </div>
+        With the grid split up like this, we can run a parity check on each group by reserving the top leftmost bit in the group for redundancy, setting it to 0 or 1 as needed to make the parity of its corresponding group even. If this is done correctly, every group should have even parity - this is the state the grid should be in if there are no errors. If there is an error, we can pinpoint its location by checking <strong>which of the parity groups are affected</strong>. Consider the following example with one error:
+        <div class="introImageContainer introImageContainerLarge">
+            <div class="introImage introImageLarge" style="background-image: url(assets/parityExample.png);"></div>
+        </div>
+        Let's work through the groups one at a time in the same order as shown above. The first group contains four 1s, so it has an even parity. This means there is either no error, or the error lies in a position not covered by this parity group. The second parity group contains five 1s, so it has an odd parity. This means there is an error and its position must be located somewhere within the parity group. The third parity group has four 1s, so the error lies outside of it. Lastly, the fourth parity group has five 1s, so the error lies somewhere within it. Looking at everything, there only exists one position that meets all of these criteria (in groups 2 and 4 but not in 1 and 3) - the 11th square in the grid. Flip that 1 to a 0, and everything is back to what it should be. This works for any position on the grid!<br><br>
+        By using this search-based method, we are able to track a 4 × 4 grid of data while only using 4 of the bits (1 per parity group) for redundancy purposes.`,
+        drawbacks: `[insert description here]`,
+        zeroBit: `[insert description here]`,
         sidebarTitle: "A Brief Guide",
         sidebarDescription: `<strong>Basic Hamming Codes:</strong><br>
         This section contains a valid 4 × 4 Hamming code. Click a square to create an error and see how it affects each of the parity groups.<br><br>
@@ -69,6 +83,7 @@ const sidebarTitle = document.getElementById("sidebarTitle");
 const sidebarDesc = document.getElementById("sidebarDescription");
 
 const loadIntro = () => {
+    //Create sub-sections for the main intro page
     const makeSection = (title, content) => {
         let sectionDiv = document.createElement("div");
         sectionDiv.classList.add("sectionDiv");
@@ -117,6 +132,7 @@ const loadBHC = () => {
 };
 
 const loadNXN = () => {
+    //Produce the option elements for the n x n select menu
     const getNXNOptions = () => {
         let options =  ["4 × 4", "8 × 8", "16 × 16"];
         let result = [];
@@ -268,12 +284,12 @@ For an n x n Hamming square,
 log2(n) squares for columns/rows
 
 COLUMN GENERAL FORMULA:
-    for i (starting at 1) columns:
-    Math.floor(i / (n / 2^i)) % 2 === 0 
+    for i (starting at 0) columns:
+    Math.floor(i / (n / 2^(i + 1))) % 2 === 1
 
 ROW GENERAL FORMULA:
-    for i (starting at 1) rows:
-    Math.floor(i / (n * 2^(i - 1))) % 2 === 1
+    for i (starting at 0) rows:
+    Math.floor(i / (n * 2^i)) % 2 === 1
 */
 
 //Generate n x n Hamming square (n must be power of 2)
