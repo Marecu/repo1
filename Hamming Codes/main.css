@@ -9,6 +9,7 @@ body {
     overflow: auto;
     width: 100vw;
     height: 100vh;
+    max-height: -webkit-fill-available;
     font-family: "Trebuchet MS";
     background-color: rgb(19, 20, 31);
     margin: 0;
