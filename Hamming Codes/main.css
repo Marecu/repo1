@@ -195,11 +195,6 @@ a {
     background: rgb(43, 45, 68);
     border-radius: 10px 10px 0px 0px;
 }
-@supports (-moz-appearance: none) {
-    .xorValueContainer {
-        overflow-y: auto;
-    }
-}
 .xorBox {
     width: 100%;
     aspect-ratio: 4 / 1;
@@ -279,6 +274,9 @@ a {
     box-shadow: 0 0 10px 100px rgb(111, 117, 180) inset;
     transition: 0.2s;
 }
+option {
+    text-align: center;
+}
 .positionNumber {
     display: inline-grid;
     width: 50%;
@@ -336,5 +334,10 @@ a {
     }
     ::-webkit-scrollbar {
         width: 0px;
+    }
+}
+@supports (-moz-appearance: none) {
+    .xorValueContainer {
+        overflow-y: auto;
     }
 }
